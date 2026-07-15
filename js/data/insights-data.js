@@ -125,6 +125,23 @@ const INSIGHTS_DB = [
       { h: "If it's a woman-specific safety concern, 181 is also an option", b: "The Women Helpline (181) offers counselling and legal guidance alongside the cybercrime process, particularly useful for cyberstalking, harassment, or NCII cases where you want support navigating next steps, not just a case number." }
     ],
     related: ["it66d", "bns78", "it67b"]
+  },
+  {
+    id: "road-accident",
+    icon: "🚦",
+    lawArea: "traffic",
+    title: "What to Do After a Road Accident in India",
+    dek: "Whether you're involved, or you're the first person to arrive at the scene — knowing these steps (and your legal protections) in the first hour genuinely changes outcomes.",
+    steps: [
+      { h: "Call 112 first — safety and medical help before anything else", b: "Move to safety if possible, and call the Emergency Response Support System (112) for police and ambulance. If you're a bystander helping, you are protected — see the next step." },
+      { h: "If you're helping as a bystander, you're legally protected", b: "Under MV Act §134A, a Good Samaritan who helps an accident victim in good faith cannot be held liable for what happens next, cannot be forced to reveal their identity, and cannot be made to pay any expenses or get pulled into police/court proceedings as a witness against their will. You can also claim a ₹25,000 reward under the Rah-Veer scheme for helping within the first 60 minutes." },
+      { h: "The hospital cannot refuse treatment or demand payment", b: "Under the Cashless Treatment of Road Accident Victims Scheme, 2025, any hospital must admit and treat a road accident victim immediately, with up to ₹1.5 lakh of the first 7 days' treatment covered directly — no upfront deposit, no 'pay first' delay. If a hospital refuses or demands payment, that itself is a violation you can report." },
+      { h: "Get an FIR registered", b: "For any accident involving injury, death, or significant damage, ensure an FIR is filed — this is essential for both the insurance claim and any compensation claim later. If the other party fled the scene, that's a hit-and-run — mention this explicitly, as it changes which compensation route applies (the Motor Vehicle Accident Fund, under MV Act §162, exists specifically for hit-and-run and uninsured-vehicle cases)." },
+      { h: "Inform your insurer and preserve evidence", b: "Photograph the vehicles, the scene, license plates, and any visible injuries. Note witness contact details. Most insurance policies require you to report a claim within a set number of days — don't delay this alongside the FIR." },
+      { h: "File a compensation claim with the MACT if there's injury, death, or major loss", b: "You (or, in a fatal case, your legal heirs) can file a claim before the Motor Accident Claims Tribunal (MACT) under MV Act §166 — against the driver, the vehicle owner, and/or the insurer directly, without needing a separate civil suit." },
+      { h: "Check and settle any challan through official channels only", b: "If you receive a traffic challan related to the incident (or any challan generally), verify and pay it only through echallan.parivahan.gov.in or the mParivahan app — never a third-party link. Challans must be paid or formally disputed within 45 days." }
+    ],
+    related: ["mva134a", "mva162", "mva166"]
   }
 ];
 

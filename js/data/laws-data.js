@@ -356,6 +356,47 @@ const LAWS_DB = {
         "RBI's tightened digital-lending guidelines — covering First Loss Default Guarantee norms and lending-app regulation — continue to reshape the fintech-NBFC lending ecosystem through 2025-26.",
         "Debt Recovery Tribunals continue to face case backlogs, keeping policy attention on tribunal capacity alongside the IBC as an alternative recovery route for corporate defaults."
       ]
+    },
+    {
+      id: "traffic",
+      name: "Traffic & Road Law",
+      icon: "🚦",
+      color: "red",
+      tagline: "Motor Vehicles Act, licences, challans & accidents",
+      summary: "Covers driving licences, traffic offences and fines under the Motor Vehicles Act, e-challans, mandatory insurance, and — critically — what the law guarantees you after a road accident, from Good Samaritan protection to cashless emergency treatment and compensation.",
+      status: "The e-Challan system now runs on a 45-day pay-or-dispute window nationwide, with RTO services/licence action possible if a challan sits unpaid 30 days past that; the nationwide Cashless Treatment of Road Accident Victims Scheme, 2025 and the Rah-Veer Good Samaritan reward scheme are both operational.",
+      keyActs: [
+        { name: "Motor Vehicles Act", year: "1988 (amended 2019)", note: "Licensing, traffic offences & penalties, insurance, accident compensation — the core road law statute" },
+        { name: "Central Motor Vehicles Rules", year: "1989", note: "Procedural rules — licence forms, helmet/safety standards, registration, fitness certificates" },
+        { name: "Cashless Treatment of Road Accident Victims Scheme", year: "2025", note: "Nationwide scheme guaranteeing cashless emergency treatment following a Supreme Court Article 21 direction" },
+        { name: "National Highways Act", year: "1956", note: "Regulates national highways — tolls, access control, land acquisition for highway development" }
+      ],
+      sections: [
+        { id: "mva3", ref: "MV Act §3", title: "Requirement of a Valid Driving Licence", body: "No person may drive a motor vehicle in a public place unless they hold a driving licence authorising them to drive that class of vehicle — the foundational licensing requirement." },
+        { id: "mva181", ref: "MV Act §181", title: "Driving Without a Licence", body: "Driving without a valid licence, or in breach of licence conditions, is punishable with imprisonment up to 3 months and/or a fine up to ₹5,000." },
+        { id: "mva183", ref: "MV Act §183", title: "Driving at Excessive Speed", body: "Overspeeding beyond the prescribed limit attracts a fine of ₹1,000–₹2,000 for a first offence (light motor vehicles), rising for repeat offences and for larger vehicles." },
+        { id: "mva184", ref: "MV Act §184", title: "Dangerous Driving (incl. Mobile Phone Use)", body: "Driving in a manner dangerous to the public, including using a handheld mobile phone while driving, is punishable with imprisonment up to 6 months to 1 year and/or a fine of ₹1,000–₹5,000 for a first offence, higher on repeat conviction." },
+        { id: "mva185", ref: "MV Act §185", title: "Drunk Driving / Driving Under the Influence", body: "A driver found drunk or under the influence of alcohol or drugs is punishable with imprisonment up to 6 months and/or a fine up to ₹10,000 for a first offence; up to 2 years imprisonment and/or ₹15,000 fine for a subsequent offence." },
+        { id: "mva194b", ref: "MV Act §194B", title: "Seat Belts & Child Safety", body: "Driving without wearing a seat belt, or carrying a child under 14 without a seat belt/child restraint system, is punishable with a fine of ₹1,000." },
+        { id: "mva194d", ref: "MV Act §194D", title: "Riding Without a Helmet", body: "Riding or carrying a passenger on a two-wheeler without wearing protective headgear is punishable with a fine of ₹1,000 and disqualification from holding a licence for 3 months." },
+        { id: "mva196", ref: "MV Act §196", title: "Driving Without Insurance", body: "Driving (or allowing a vehicle to be driven) without a valid third-party insurance policy is punishable with imprisonment up to 3 months and/or a fine up to ₹2,000 for a first offence, higher on repeat conviction. Third-party insurance is legally mandatory for every vehicle on Indian roads." },
+        { id: "mva134a", ref: "MV Act §134A", title: "Good Samaritan Protection", body: "A person who in good faith renders emergency medical or non-medical assistance to an accident victim cannot be held liable for any injury or death that follows, cannot be compelled to disclose their name/details unless they choose to, and cannot be forced to bear medical or other expenses. This exists specifically to stop bystanders from avoiding accident victims out of fear of legal or police harassment." },
+        { id: "mva162", ref: "MV Act §162", title: "Motor Vehicle Accident Fund & Rah-Veer Scheme", body: "Funds interim relief for hit-and-run and uninsured-vehicle victims, and now underpins the Rah-Veer Yojana, which rewards a Good Samaritan ₹25,000 for helping an accident victim within the first 60 minutes ('golden hour') after an accident." },
+        { id: "mva166", ref: "MV Act §166", title: "Compensation Claims (MACT)", body: "A road-accident victim (or their legal heirs, in a fatal accident) can file a claim for compensation before the Motor Accident Claims Tribunal (MACT) against the driver, owner, and/or insurer — no separate civil suit is required." },
+        { id: "mva199a", ref: "MV Act §199A", title: "Owner/Guardian Liability for Juvenile Driving", body: "If a minor drives a motor vehicle, the owner and the guardian/parent of the minor are deemed guilty (subject to specified exceptions), face imprisonment up to 3 years and a fine up to ₹25,000, and the vehicle's registration can be cancelled; the juvenile is also barred from getting a licence until age 25." },
+        { id: "mva200", ref: "MV Act §200", title: "Traffic Challans — Composition of Offences", body: "Many traffic offences (unpaid challans for speeding, no helmet, no seat belt, driving without a licence, and similar violations) can be 'compounded' — settled by paying a fixed fine directly to a traffic officer or online, instead of going through a court prosecution. Serious offences — drunk driving, causing death or grievous injury, hit-and-run — cannot be compounded this way and must go through the courts. Check and pay any challan only via the official e-Challan portal or mParivahan app, within the 45-day window." },
+        { id: "cashless2025", ref: "Cashless Treatment Scheme, 2025", title: "Guaranteed Cashless Emergency Treatment", body: "Following a Supreme Court direction that golden-hour trauma care is a constitutional right under Article 21, every hospital must now admit and treat a road accident victim immediately, with up to ₹1.5 lakh of treatment covered directly for the first 7 days. A hospital cannot demand upfront payment or refuse admission — doing so is itself a violation you can report." }
+      ],
+      helplines: [
+        { name: "Traffic e-Challan Portal", number: "echallan.parivahan.gov.in", note: "Check and pay traffic challans online using your vehicle number, DL number, or challan number — the only official portal; challans must be paid or disputed within 45 days." },
+        { name: "mParivahan App", number: "mParivahan", note: "Official app for your digital driving licence and RC — DigiLocker/mParivahan documents are legally valid nationwide, so traffic police must accept them instead of physical copies." },
+        { name: "Emergency Response Support System", number: "112", note: "Unified emergency number for road accidents — connects to police, ambulance, and fire response." }
+      ],
+      recentUpdates: [
+        "Supreme Court's January 2025 ruling that golden-hour trauma care is a constitutional right under Article 21 led to the nationwide Cashless Treatment of Road Accident Victims Scheme, 2025 — up to ₹1.5 lakh covered per victim for the first 7 days, with hospitals barred from demanding upfront payment or refusing admission.",
+        "The Rah-Veer Good Samaritan reward scheme (₹25,000 for helping a victim within the golden hour) is now operational alongside the pre-existing legal protections under MV Act §134A.",
+        "The e-Challan payment/dispute window is now standardised at 45 days nationwide, with RTO service blocks or licence action possible if a challan remains unpaid 30 days beyond that."
+      ]
     }
   ]
 };
