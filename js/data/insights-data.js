@@ -108,6 +108,23 @@ const INSIGHTS_DB = [
       { h: "Register it if the term exceeds 11 months", b: "Agreements for a term of 12 months or more generally require registration under the Registration Act to be fully enforceable — many landlords use 11-month terms specifically to avoid this, which is legal but worth knowing." }
     ],
     related: ["mta-deposit"]
+  },
+  {
+    id: "cyber-crime-victim",
+    icon: "🛡️",
+    lawArea: "cyber",
+    title: "What to Do If You're a Victim of Cyber Crime",
+    dek: "Phishing, cyberbullying, a hacked account, a stalker who won't stop messaging, an intimate photo shared without consent — the first hour matters. Here's exactly what to do, and who to call.",
+    steps: [
+      { h: "For financial fraud, call 1930 immediately — don't wait", b: "If money has been debited via UPI, net-banking, a card, or a fraudulent loan app, call the National Cyber Crime Helpline (1930) right away. Banks can freeze funds still sitting in the fraudster's account if you report within the 'golden hour' — the longer you wait, the more likely the money is already moved out and unrecoverable." },
+      { h: "Preserve everything — don't delete, don't confront", b: "Screenshot the messages, profile, emails, or fake website (including the URL). Note transaction IDs, phone numbers, UPI IDs, and timestamps. Don't delete the evidence trying to 'get rid of it,' and don't engage further with a stalker or blackmailer — that can escalate things and doesn't help your complaint." },
+      { h: "File a complaint on cybercrime.gov.in", b: "Beyond the 1930 call, file a full complaint on the National Cyber Crime Reporting Portal — choose 'Report Financial Fraud' for money-related cases, or 'Report Other Cyber Crimes' for phishing, hacking, cyberbullying, cyberstalking, or non-consensual intimate images. Crimes against women and children have a dedicated, more private track on the same portal." },
+      { h: "For a minor involved, also call 1098", b: "If the victim is a child — CSAM, online grooming, or a child being bullied or threatened online — call CHILDLINE (1098) alongside the cybercrime portal. This also engages POCSO Act protections, not just the IT Act." },
+      { h: "Report to the platform directly, too", b: "Report the account, post, or message to the platform itself (Instagram, WhatsApp, Facebook, X, etc.) for takedown — platforms are required under the IT Rules, 2021 to act on flagged content within set timelines, and this often works faster than waiting for legal process to remove something." },
+      { h: "Know the specific law that applies to you", b: "Phishing/fake websites: IT Act §66D. Hacked account or stolen data: §66 / §66C. Threatening or anonymous messages: BNS §351(4). Being followed or monitored online: BNS §78 (stalking). Intimate images shared without consent: IT Act §66E. This matters because it tells the investigating officer exactly what to charge — vague complaints move slower." },
+      { h: "If it's a woman-specific safety concern, 181 is also an option", b: "The Women Helpline (181) offers counselling and legal guidance alongside the cybercrime process, particularly useful for cyberstalking, harassment, or NCII cases where you want support navigating next steps, not just a case number." }
+    ],
+    related: ["it66d", "bns78", "it67b"]
   }
 ];
 

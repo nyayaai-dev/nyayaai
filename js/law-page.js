@@ -45,6 +45,22 @@
     tocWrap.innerHTML += '<a href="#' + s.id + '">' + s.ref + " — " + s.title + "</a>";
   });
 
+  // Helplines & immediate steps (only rendered for categories that define them, e.g. Cyber Law)
+  if (cat.helplines && cat.helplines.length) {
+    const statusHeading = document.getElementById("statusHeading");
+    let helplineHtml = '<h2 id="helplines">Helplines &amp; Where to Report</h2><div class="grid grid-2" id="helplinesWrap">';
+    cat.helplines.forEach(function (h) {
+      helplineHtml += '<div class="card helpline-card">' +
+        '<div class="helpline-number">' + h.number + "</div>" +
+        "<h3>" + h.name + "</h3>" +
+        "<p>" + h.note + "</p>" +
+        "</div>";
+    });
+    helplineHtml += "</div>";
+    statusHeading.insertAdjacentHTML("beforebegin", helplineHtml);
+    tocWrap.innerHTML += '<a href="#helplines">Helplines &amp; Where to Report</a>';
+  }
+
   // Recent updates
   const updatesWrap = document.getElementById("updatesWrap");
   cat.recentUpdates.forEach(function (u) {

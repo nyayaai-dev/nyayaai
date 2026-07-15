@@ -243,22 +243,40 @@ const LAWS_DB = {
       name: "Cyber & Data Protection Law",
       icon: "💻",
       color: "blue",
-      tagline: "IT Act, DPDP Act & digital offences",
-      summary: "Covers cybercrime, electronic contracts/signatures, intermediary liability, and — since 2023 — a comprehensive personal data protection framework.",
-      status: "Digital Personal Data Protection Act, 2023 rules were notified in 2025-26, bringing the Data Protection Board and compliance obligations for 'Data Fiduciaries' into effective operation.",
+      tagline: "Cybercrime, IT Act, DPDP Act & online safety",
+      summary: "Covers the full range of cybercrime — hacking, phishing, identity theft, cyberstalking, cyberbullying, online obscenity and child-safety offences — alongside electronic contracts, intermediary liability, and a comprehensive personal data protection framework.",
+      status: "Digital Personal Data Protection Act, 2023 rules were notified in 2025-26, bringing the Data Protection Board into effective operation; India's dedicated cybercrime helpline (1930) and reporting portal (cybercrime.gov.in) continue to be the primary route for victims, handling lakhs of complaints and saving thousands of crores in frozen fraudulent transactions.",
       keyActs: [
-        { name: "Information Technology Act", year: "2000", note: "Amended 2008 — electronic records/signatures, cybercrime, intermediary due diligence" },
+        { name: "Information Technology Act", year: "2000", note: "Amended 2008 — hacking, identity theft, phishing, obscenity, cyberstalking-adjacent offences, electronic records/signatures, intermediary due diligence" },
+        { name: "Bharatiya Nyaya Sanhita (BNS)", year: "2023", note: "Stalking (incl. cyberstalking), criminal intimidation by anonymous communication, defamation — apply equally when committed online" },
         { name: "Digital Personal Data Protection (DPDP) Act", year: "2023", note: "India's comprehensive data-protection law — consent, purpose limitation, data principal rights, Data Protection Board" },
-        { name: "IT (Intermediary Guidelines and Digital Media Ethics Code) Rules", year: "2021", note: "Due diligence for social media/OTT/digital news intermediaries, grievance officers" }
+        { name: "IT (Intermediary Guidelines and Digital Media Ethics Code) Rules", year: "2021", note: "Due diligence for social media/OTT/digital news intermediaries, mandatory grievance officers, content takedown timelines" },
+        { name: "Protection of Children from Sexual Offences (POCSO) Act", year: "2012", note: "Applies alongside IT Act §67B whenever a cybercrime victim is a minor" }
       ],
       sections: [
         { id: "it43", ref: "IT Act §43", title: "Penalty for Damage to Computer/System", body: "Civil liability for unauthorised access, downloading, introducing viruses, or damaging computer systems/data — compensation to the affected person." },
-        { id: "it66c", ref: "IT Act §66C", title: "Identity Theft", body: "Fraudulent/dishonest use of another person's electronic signature, password, or unique identification — up to 3 years imprisonment and fine." },
-        { id: "it66e", ref: "IT Act §66E", title: "Violation of Privacy", body: "Capturing, publishing, or transmitting images of a person's private area without consent — up to 3 years imprisonment and fine up to ₹2 lakh." },
+        { id: "it66", ref: "IT Act §66", title: "Hacking & Computer-Related Offences", body: "Doing any act referred to in §43 dishonestly or fraudulently — unauthorised access, data theft, introducing malware/ransomware — is punishable with imprisonment up to 3 years and/or fine up to ₹5 lakh." },
+        { id: "it66c", ref: "IT Act §66C", title: "Identity Theft", body: "Fraudulent/dishonest use of another person's electronic signature, password, or unique identification (e.g. stolen login credentials, cloned SIM/UPI identity) — up to 3 years imprisonment and fine up to ₹1 lakh." },
+        { id: "it66d", ref: "IT Act §66D", title: "Phishing — Cheating by Personation", body: "Cheating by personation using a computer resource or communication device — the primary provision used against phishing emails/SMS, fake bank websites, and fraudulent job/loan offers impersonating real institutions. Up to 3 years imprisonment and fine up to ₹1 lakh." },
+        { id: "it66e", ref: "IT Act §66E", title: "Violation of Privacy", body: "Capturing, publishing, or transmitting images of a person's private area without consent — covers 'revenge porn'/non-consensual intimate imagery (NCII) and hidden-camera voyeurism. Up to 3 years imprisonment and fine up to ₹2 lakh." },
+        { id: "it67", ref: "IT Act §67", title: "Publishing Obscene Material Electronically", body: "Publishing or transmitting obscene material in electronic form — up to 3 years imprisonment and fine up to ₹5 lakh on first conviction; up to 5 years and ₹10 lakh on repeat conviction." },
+        { id: "it67a", ref: "IT Act §67A", title: "Sexually Explicit Material", body: "Publishing or transmitting material containing sexually explicit acts electronically — a more severe offence than §67, with correspondingly higher penalties." },
+        { id: "it67b", ref: "IT Act §67B", title: "Child Sexual Abuse Material (CSAM)", body: "Publishing, transmitting, creating, collecting, browsing, or distributing material depicting children in sexually explicit acts, or online grooming/inducement of a child — up to 5 years imprisonment and fine up to ₹10 lakh on first conviction, up to 7 years on repeat conviction. Applies alongside the POCSO Act where the victim is a minor." },
+        { id: "bns78", ref: "BNS §78", title: "Stalking (including Cyberstalking)", body: "Following a person and repeatedly contacting them despite disinterest, or monitoring their use of the internet, email, or electronic communication, causing fear or distress — explicitly covers cyberstalking conducted entirely through messaging, social media, or tracking. Up to 3 years imprisonment (first conviction), up to 5 years (repeat)." },
+        { id: "bns351", ref: "BNS §351(4)", title: "Criminal Intimidation by Anonymous Communication", body: "Threatening messages sent anonymously or with the sender's identity concealed — commonly used against anonymous trolling, threatening DMs, and cyberbullying involving threats — carries up to 2 years imprisonment in addition to the base criminal intimidation punishment." },
+        { id: "bns356", ref: "BNS §356", title: "Defamation (incl. Cyber Defamation)", body: "Making or publishing any imputation intending to harm a person's reputation — applies equally to defamatory posts, reviews, or messages published online, in addition to any civil defamation remedy." },
         { id: "dpdp4", ref: "DPDP Act §4", title: "Grounds for Processing Personal Data", body: "Personal data may be processed only for a lawful purpose with the data principal's consent, or for specified 'legitimate uses' listed in the Act." },
         { id: "dpdp8", ref: "DPDP Act §8", title: "Obligations of Data Fiduciary", body: "Must implement reasonable security safeguards, notify the Board and affected data principals of a personal data breach, and cannot retain data beyond the purpose for which it was collected." }
       ],
+      helplines: [
+        { name: "National Cyber Crime Helpline", number: "1930", note: "24/7 toll-free — call immediately for financial fraud (UPI, net-banking, card, loan-app scams) to request a transaction freeze within the 'golden hour' before funds move further." },
+        { name: "National Cyber Crime Reporting Portal", number: "cybercrime.gov.in", note: "File a formal complaint online for any cybercrime — hacking, phishing, stalking, obscene content, financial fraud. Has a dedicated, partly-anonymous reporting track for crimes against women & children." },
+        { name: "CHILDLINE India", number: "1098", note: "Child helpline — for any cybercrime involving a minor, including CSAM, online grooming, or a child being cyberbullied." },
+        { name: "Women Helpline", number: "181", note: "Counselling, legal assistance, and support for online harassment, cyberstalking, NCII/revenge-porn, and abuse targeting women." },
+        { name: "Emergency Response Support System", number: "112", note: "India's unified emergency number — police, medical, fire, and immediate women's/child safety response." }
+      ],
       recentUpdates: [
+        "The National Cyber Crime Reporting Portal (relaunched December 2023) and the 1930 helpline together have handled over 9.9 lakh complaints and helped save more than ₹3,431 crore in frozen fraudulent transactions, per government figures.",
         "Data Protection Board of India, established under the DPDP Act, has become operational for handling data-breach complaints and imposing penalties (up to ₹250 crore for significant breaches) as rules were progressively notified through 2025-26.",
         "Courts continue to grapple with AI-related evidentiary issues — see the Supreme Court's July 2026 caution (Pooja Ramesh Singh v. J&K Bank) against AI-hallucinated case law being cited in filings."
       ]

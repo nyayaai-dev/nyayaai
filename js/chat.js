@@ -95,10 +95,42 @@ const DISCLAIMER_LINE =
   }
 
   // ---------- Demo-mode retrieval engine ----------
-  const STOPWORDS = new Set(["the","a","an","is","are","of","to","in","for","and","or","what","how","do","i","my","me","can","you","about","on","with","this","that","it","please","tell","explain","help","india","indian","under","by","from","as","at","into","than","was","were","be","been","if","when","new","will","not"]);
+  const STOPWORDS = new Set(["the","a","an","is","are","of","to","in","for","and","or","what","how","do","i","my","me","can","you","about","on","with","this","that","it","please","tell","explain","help","india","indian","under","by","from","as","at","into","than","was","were","be","been","if","when","new","will","not","applies","apply","applied"]);
 
   function tokenize(str) {
     return str.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(function (w) { return w && !STOPWORDS.has(w); });
+  }
+
+  // Document-frequency map: how many sections each word appears in, across the whole
+  // knowledge base. Built once. Lets scoreText tell a distinctive word (e.g. "cyberbullying,"
+  // in one section) from a generic one (e.g. "online," scattered across many) — without this,
+  // a query could get outranked by an unrelated section that happens to share two common words.
+  const WORD_DOC_FREQ = (function () {
+    const df = {};
+    let sectionCount = 0;
+    if (typeof LAWS_DB !== "undefined") {
+      LAWS_DB.categories.forEach(function (cat) {
+        cat.sections.forEach(function (s) {
+          sectionCount++;
+          const words = new Set((s.title + " " + s.body).toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean));
+          words.forEach(function (w) { df[w] = (df[w] || 0) + 1; });
+        });
+      });
+    }
+    return { counts: df, total: sectionCount || 1 };
+  })();
+
+  function idfWeight(word) {
+    const df = WORD_DOC_FREQ.counts[word];
+    const total = WORD_DOC_FREQ.total;
+    // If the query word never appears verbatim anywhere in the corpus, any "match" scoreText
+    // found for it was necessarily a fuzzy prefix collision (e.g. "shared" ~ "shareholders") —
+    // that deserves low confidence, not the maximum rarity boost a genuinely rare real word gets.
+    if (df === undefined) return 0.5;
+    if (df === 1) return 3;
+    if (df <= 3) return 2;
+    if (df <= total * 0.25) return 1;
+    return 0.4; // appears in a quarter+ of all sections — too generic to be a good discriminator
   }
 
   // Plain word-overlap score — used for prose (category name/summary, section title/body).
@@ -115,7 +147,7 @@ const DISCLAIMER_LINE =
         const prefixLen = Math.min(minLen, 5);
         return tok.slice(0, prefixLen) === w.slice(0, prefixLen);
       });
-      if (matched) score += tok.length > 4 ? 2 : 1;
+      if (matched) score += (tok.length > 4 ? 2 : 1) * idfWeight(tok);
     });
     return score;
   }

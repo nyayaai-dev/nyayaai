@@ -302,6 +302,10 @@ footer.site-footer {
 }
 .article-block .num { color: var(--ink-100); font-weight: 700; font-family: var(--font-serif); }
 .article-block h3 { font-size: 1.02rem; margin-bottom: 6px; }
+.helpline-card { border-color: var(--ink-100); }
+.helpline-number { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 700; color: var(--ink-100); letter-spacing: .02em; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.helpline-card h3 { font-size: .95rem; margin-bottom: 6px; }
+.helpline-card p { font-size: .86rem; }
 .article-block p { font-size: .9rem; margin-bottom: 8px; }
 .toc-box { position: sticky; top: 90px; background: var(--navy-800); border: 1px solid var(--navy-700); border-radius: var(--radius-md); padding: 18px; }
 .toc-box a { display: block; padding: 6px 0; font-size: .84rem; color: var(--ink-400); border-bottom: 1px solid var(--navy-900); }
