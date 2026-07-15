@@ -1,8 +1,8 @@
 /**
  * NyayaAI Chat Engine
  * ---------------------------------------------------------------
- * If CHAT_CONFIG.apiEndpoint is set, messages are POSTed to that backend
- * (expected to proxy to an LLM such as Claude/GPT and return {reply: "..."})
+ * If AI_CONFIG.apiEndpoint (js/ai-config.js) is set, messages are POSTed to that
+ * backend (expected to proxy to an LLM such as Claude/GPT and return {reply: "..."})
  * — see server/chat-proxy-example.js and README.md for how to stand one up.
  *
  * Until a backend is configured, the assistant runs in DEMO MODE: a local,
@@ -10,15 +10,6 @@
  * general-purpose LLM — it only surfaces matching statute/article summaries
  * from the seeded knowledge base, so answers are limited to that content.
  */
-const CHAT_CONFIG = {
-  apiEndpoint: "", // e.g. "https://your-backend.example.com/api/chat" — leave empty for demo mode
-  systemPrompt:
-    "You are NyayaAI, an AI legal information assistant for Indian law. Answer using current Indian statutes " +
-    "(BNS/BNSS/BSA, Constitution, Companies Act, Labour Codes, DPDP Act, etc). Always cite the specific " +
-    "Act/Section/Article. Always include a disclaimer that this is legal information, not a substitute for a " +
-    "licensed advocate, especially for court representation, filings, or jurisdiction-specific strategy."
-};
-
 const DISCLAIMER_LINE =
   "This is general legal information based on current Indian statutes, not a personalised legal opinion. " +
   "For representation in court, contract negotiation, or advice specific to your facts, please also consult a licensed advocate.";
@@ -45,7 +36,7 @@ const DISCLAIMER_LINE =
 
   if (!log || !form || !input) return;
 
-  const isLive = !!CHAT_CONFIG.apiEndpoint;
+  const isLive = !!AI_CONFIG.apiEndpoint;
   if (statusDot && statusText) {
     if (isLive) {
       statusDot.classList.remove("demo");
@@ -242,10 +233,10 @@ const DISCLAIMER_LINE =
   async function getReply(query) {
     if (isLive) {
       try {
-        const res = await fetch(CHAT_CONFIG.apiEndpoint, {
+        const res = await fetch(AI_CONFIG.apiEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ system: CHAT_CONFIG.systemPrompt, messages: history.concat([{ role: "user", content: query }]) })
+          body: JSON.stringify({ system: AI_CONFIG.chatSystemPrompt, messages: history.concat([{ role: "user", content: query }]) })
         });
         if (!res.ok) throw new Error("Backend error " + res.status);
         const data = await res.json();

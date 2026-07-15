@@ -6,7 +6,7 @@
 
     // Each step runs independently — if one throws (e.g. localStorage blocked under a
     // locked-down file:// context), it shouldn't take the rest of the page's behavior with it.
-    [setupMobileNav, injectInsightsNavLink, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectConsentModal]
+    [setupMobileNav, injectNavLinks, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectConsentModal]
       .forEach(function (fn) {
         try { fn(); } catch (err) { console.error("[NyayaAI]", fn.name, "failed:", err); }
       });
@@ -31,44 +31,74 @@
       });
     }
 
-    // Insights isn't hand-written into every page's nav markup — inject it once here so
-    // every page (existing or future) picks it up automatically without per-file edits.
-    function injectInsightsNavLink() {
+    // Documents/Insights aren't hand-written into every page's nav markup — inject them
+    // once here so every page (existing or future) picks them up automatically without
+    // per-file edits.
+    function injectNavLinks() {
       const nav = document.querySelector(".navlinks");
-      if (!nav || nav.querySelector('[data-nav="insights.html"]')) return;
-      const aboutLink = Array.from(nav.querySelectorAll("a")).find(function (a) {
-        return /(^|\/)about\.html$/.test(a.getAttribute("href") || "");
-      });
-      const link = document.createElement("a");
-      link.href = p("insights.html");
-      link.setAttribute("data-nav", "insights.html");
-      link.textContent = "Insights";
-      if (aboutLink) nav.insertBefore(link, aboutLink);
-      else nav.appendChild(link);
+      if (!nav) return;
+
+      if (!nav.querySelector('[data-nav="documents.html"]')) {
+        const chatLink = Array.from(nav.querySelectorAll("a")).find(function (a) {
+          return /(^|\/)chat\.html$/.test(a.getAttribute("href") || "");
+        });
+        const docsLink = document.createElement("a");
+        docsLink.href = p("documents.html");
+        docsLink.setAttribute("data-nav", "documents.html");
+        docsLink.textContent = "Documents";
+        if (chatLink && chatLink.nextSibling) nav.insertBefore(docsLink, chatLink.nextSibling);
+        else if (chatLink) nav.appendChild(docsLink);
+        else nav.insertBefore(docsLink, nav.firstChild);
+      }
+
+      if (!nav.querySelector('[data-nav="insights.html"]')) {
+        const aboutLink = Array.from(nav.querySelectorAll("a")).find(function (a) {
+          return /(^|\/)about\.html$/.test(a.getAttribute("href") || "");
+        });
+        const insightsLink = document.createElement("a");
+        insightsLink.href = p("insights.html");
+        insightsLink.setAttribute("data-nav", "insights.html");
+        insightsLink.textContent = "Insights";
+        if (aboutLink) nav.insertBefore(insightsLink, aboutLink);
+        else nav.appendChild(insightsLink);
+      }
     }
 
-    // Same idea for FAQ/Contact — appended to whatever footer structure the page has,
-    // instead of requiring every page to hand-author the links.
+    // Same idea for Documents/Insights/FAQ/Contact — appended to whatever footer
+    // structure the page has, instead of requiring every page to hand-author the links.
+    // Each link is checked independently so adding a new one later doesn't get skipped
+    // just because older links are already present.
     function injectFooterLinks() {
       const platformList = document.querySelector('.footer-grid a[href$="about.html"]');
       if (platformList) {
         const ul = platformList.closest("ul");
-        if (ul && !ul.querySelector('a[href$="faq.html"]')) {
-          ul.insertAdjacentHTML("beforeend",
-            '<li><a href="' + p("insights.html") + '">Insights &amp; Guides</a></li>' +
-            '<li><a href="' + p("faq.html") + '">FAQ</a></li>' +
-            '<li><a href="' + p("contact.html") + '">Contact</a></li>');
+        if (ul) {
+          const wanted = [
+            ["documents.html", "Document Intelligence"],
+            ["insights.html", "Insights &amp; Guides"],
+            ["faq.html", "FAQ"],
+            ["contact.html", "Contact"]
+          ];
+          wanted.forEach(function (pair) {
+            if (!ul.querySelector('a[href$="' + pair[0] + '"]')) {
+              ul.insertAdjacentHTML("beforeend", '<li><a href="' + p(pair[0]) + '">' + pair[1] + "</a></li>");
+            }
+          });
         }
         return;
       }
       const bottom = document.querySelector(".footer-bottom");
-      if (bottom && !bottom.querySelector('a[href$="faq.html"]')) {
+      if (bottom) {
         const disclaimerSpan = Array.from(bottom.querySelectorAll("span")).find(function (s) {
           return s.querySelector('a[href$="disclaimer.html"]');
         });
         if (disclaimerSpan) {
-          disclaimerSpan.insertAdjacentHTML("beforeend",
-            ' · <a href="' + p("faq.html") + '">FAQ</a> · <a href="' + p("contact.html") + '">Contact</a>');
+          const wanted = [["documents.html", "Documents"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
+          wanted.forEach(function (pair) {
+            if (!bottom.querySelector('a[href$="' + pair[0] + '"]')) {
+              disclaimerSpan.insertAdjacentHTML("beforeend", ' · <a href="' + p(pair[0]) + '">' + pair[1] + "</a>");
+            }
+          });
         }
       }
     }
@@ -103,6 +133,12 @@
         if (typeof INSIGHTS_DB !== "undefined") {
           INSIGHTS_DB.forEach(function (g) {
             items.push({ type: "Guide", title: g.title, sub: g.dek.slice(0, 70) + "…", href: p("insights.html") + "#" + g.id });
+          });
+        }
+        items.push({ type: "Tool", title: "AI Document Intelligence", sub: "Analyze contracts, NDAs, rental agreements & more", href: p("documents.html") });
+        if (typeof DOCUMENT_TYPES !== "undefined") {
+          DOCUMENT_TYPES.forEach(function (dt) {
+            items.push({ type: "Tool", title: "Analyze a " + dt.name, sub: "Dates, payments, risky clauses, missing clauses, comparison", href: p("documents.html") });
           });
         }
         return items;

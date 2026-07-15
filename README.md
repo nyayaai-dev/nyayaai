@@ -1,9 +1,10 @@
 # NyayaAI — AI Legal Consultation Platform (India)
 
-A fully static (no build step) website: an AI-operated legal information platform covering 12
+A fully static (no build step) website: an AI-operated legal information platform covering 13
 practice areas of Indian law (Constitutional, Criminal (BNS/BNSS/BSA), Civil, Corporate, Family,
-Property, Labour, Tax, Cyber, Consumer, Intellectual Property, Banking & Finance), plus a curated
-Current Affairs feed, practical step-by-step guides, site-wide search, and an FAQ/Contact section.
+Property, Labour, Tax, Cyber, Consumer, Intellectual Property, Banking & Finance, Traffic & Road
+Law), plus a curated Current Affairs feed, practical step-by-step guides, an AI Document
+Intelligence tool, site-wide search, and an FAQ/Contact section.
 
 Design: monochrome (black/white/gray) throughout — see `css/style.css`.
 
@@ -23,8 +24,9 @@ npx serve .
 ```
 index.html            Landing page
 chat.html              AI consultation chat UI
-laws.html               Practice-area hub (grid of all 12 categories)
-laws/<category>.html    12 thin page shells — all content is rendered by js/law-page.js from laws-data.js
+documents.html          AI Document Intelligence — analyze/compare contracts, NDAs, rental agreements, etc.
+laws.html               Practice-area hub (grid of all 13 categories)
+laws/<category>.html    13 thin page shells — all content is rendered by js/law-page.js from laws-data.js
 news.html               Current-affairs feed
 insights.html            Practical step-by-step guides (file an FIR, register a trademark, etc.)
 faq.html                 Honest, conversational FAQ (accordion)
@@ -36,16 +38,46 @@ terms.html               Terms of Use (acceptable use, IP, liability, governing 
 
 css/style.css            Shared design system
 js/main.js               Nav toggle, active-link highlighting, site-wide search, entry disclaimer modal,
-                          and JS-injected Insights/FAQ/Contact links (so no page has to hand-author them)
+                          and JS-injected Documents/Insights/FAQ/Contact links (no page hand-authors them)
+js/ai-config.js           Shared AI_CONFIG (apiEndpoint + system prompts) used by both chat.js and
+                          documents-page.js — set apiEndpoint once here to enable a live backend for both
 js/chat.js                Chat engine (demo-mode retrieval + live-backend hook)
 js/law-page.js            Renders a category page from laws-data.js
 js/insights-page.js       Renders insights.html from insights-data.js
+js/doc-analysis.js        Document Intelligence's local analysis engine (dates, payments, obligations,
+                          risky-phrase flags, missing-clause checklist, paragraph diff) — pure text
+                          processing, no AI, runs entirely in the browser
+js/documents-page.js      Controller for documents.html — wires the UI to doc-analysis.js, handles the
+                          AI-gated deep-analysis buttons (summarize/explain/suggest), and PDF report
+                          generation via the browser's native print-to-PDF
 js/data/laws-data.js      The legal knowledge base (edit this to add/update law content)
 js/data/news-data.js      Seeded current-affairs items + NEWS_CONFIG for a future live feed
 js/data/insights-data.js  Step-by-step practical guides
+js/data/document-checklists.js   Risky-phrase dictionary, obligation/payment keywords, and per-document-type
+                          "commonly expected clause" checklists used by doc-analysis.js
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
+
+## AI Document Intelligence — what actually works without a backend
+
+`documents.html` lets you paste or upload (.txt only for now) a contract, NDA, rental agreement,
+employment contract, sale deed, partnership deed, court order, or legal notice. Several features are
+**genuinely functional today with zero AI backend**, because they're real text processing on your
+actual document, not fabricated output:
+
+- Extracting dates, payment amounts, and obligation-language sentences
+- Flagging phrases commonly worth a closer look (indemnification, liquidated damages, sole discretion,
+  auto-renewal, etc. — see `RISKY_PHRASES` in `js/data/document-checklists.js`)
+- Checking for commonly-expected clauses that seem to be missing, per document type
+- Comparing two documents paragraph-by-paragraph (a real LCS diff, not an approximation)
+- A composite "executive summary" built from the above (not AI-written prose, but not fake either)
+- Generating a PDF report via the browser's own print-to-PDF
+
+**Summarize / Explain every paragraph / Suggest improvements** are the exception — those need genuine
+language understanding, so they're gated exactly like the chat: with `AI_CONFIG.apiEndpoint` unset,
+clicking them shows an honest "no AI backend connected" message rather than faking a response. Set
+`apiEndpoint` in `js/ai-config.js` once to enable live AI for *both* the chat and these three buttons.
 
 ## Notable behavior worth knowing about
 
@@ -65,12 +97,15 @@ server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM
   use the reserved, non-resolving `.example` domain deliberately — swap them for real inboxes you
   actually monitor before this goes live, since the IT Rules require a working, published channel.
 
-## The AI chat currently runs in "demo mode"
+## The AI chat (and document deep-analysis) currently run in "demo mode"
 
-`js/chat.js` has an empty `CHAT_CONFIG.apiEndpoint`, so it answers using a local keyword-matching
-engine over `js/data/laws-data.js` — no external API calls, no cost, works offline. This is enough to
-demo the full UX, but it is **not a general-purpose LLM**: it can only surface what's in the seeded
-knowledge base.
+`js/ai-config.js` has an empty `AI_CONFIG.apiEndpoint`, so `chat.js` answers using a local
+keyword-matching engine over `js/data/laws-data.js`, and `documents-page.js`'s Summarize/Explain/
+Suggest buttons show an honest "no backend connected" message — no external API calls, no cost,
+works offline. This is enough to demo the full UX, but it is **not a general-purpose LLM**: the chat
+can only surface what's in the seeded knowledge base, and the AI-only document features do nothing
+until a backend is connected (the extraction features on `documents.html` work fully regardless — see
+above).
 
 ### To wire up a real AI (recommended: Anthropic Claude)
 
@@ -79,7 +114,8 @@ knowledge base.
 3. Create `server/.env` with `ANTHROPIC_API_KEY=sk-ant-...` (get a key at console.anthropic.com — keep
    it server-side, never put it in frontend JS).
 4. `node server/chat-proxy-example.js` — starts a proxy on `http://localhost:8787`.
-5. In `js/chat.js`, set `CHAT_CONFIG.apiEndpoint = "http://localhost:8787/api/chat"`.
+5. In `js/ai-config.js`, set `AI_CONFIG.apiEndpoint = "http://localhost:8787/api/chat"` — this enables
+   both the chat and the document deep-analysis buttons at once.
 6. For production, deploy the proxy (Vercel/Netlify function, Render, Railway, etc.) and point
    `apiEndpoint` at the deployed URL instead of localhost.
 
