@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Area — NyayaAI</title>
+<meta name="description" content="">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-category-id="ip">
+
+<div class="topbar"><div class="wrap"><span>⚖️</span><span><strong>100% AI-operated.</strong> Legal information, not a substitute for a licensed advocate.</span></div></div>
+
+<header class="site-header">
+  <nav class="navbar wrap">
+    <a href="../index.html" class="brand"><span class="mark">न्या</span><span>NyayaAI<span class="tag">AI Legal Consultation · India</span></span></a>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Home</a>
+      <a href="../chat.html">AI Consultation</a>
+      <a href="../laws.html" class="active">Practice Areas</a>
+      <a href="../news.html">Current Affairs</a>
+      <a href="../about.html">About</a>
+    </div>
+    <div class="nav-cta">
+      <a href="../chat.html" class="btn btn-primary btn-sm">Start Consultation</a>
+      <button class="navtoggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<section class="law-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">Home</a> / <a href="../laws.html">Practice Areas</a> / <span id="crumbName">…</span></div>
+    <div class="badge-row"><span class="pill gold" id="catIcon" style="font-size:1.4rem;padding:8px 14px"></span></div>
+    <h1 id="catName">Loading…</h1>
+    <p class="eyebrow" id="catTagline"></p>
+    <p class="lead" style="max-width:760px" id="catSummary"></p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="alert" id="catStatus"></div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap law-layout">
+    <div>
+      <h2>Key Acts &amp; Statutes</h2>
+      <div style="overflow-x:auto">
+        <table class="simple">
+          <thead><tr><th>Act</th><th>Year</th><th>Notes</th></tr></thead>
+          <tbody id="actsBody"></tbody>
+        </table>
+      </div>
+
+      <h2 style="margin-top:44px">Key Provisions</h2>
+      <div id="sectionsWrap"></div>
+
+      <h2 style="margin-top:44px">Current Affairs &amp; Status (2026)</h2>
+      <div id="updatesWrap"></div>
+
+      <div class="card center" style="margin-top:34px;padding:36px">
+        <h3>Have a specific question about this area?</h3>
+        <p>Ask NyayaAI directly — it already has this context loaded.</p>
+        <a href="#" id="askCta" class="btn btn-primary">💬 Ask NyayaAI →</a>
+      </div>
+    </div>
+    <aside>
+      <div class="toc-box">
+        <h4 style="margin-bottom:12px">On this page</h4>
+        <div id="tocWrap"></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="tight" id="relatedNewsSection">
+  <div class="wrap">
+    <h2>Related news</h2>
+    <div class="grid grid-3" id="relatedNews"></div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <h2>Explore other practice areas</h2>
+    <div id="otherCats"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> NyayaAI. Educational legal information platform — not a law firm.</span>
+      <span><a href="../disclaimer.html">Disclaimer</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/data/laws-data.js"></script>
+<script src="../js/data/news-data.js"></script>
+<script src="../js/data/insights-data.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/law-page.js"></script>
+</body>
+</html>

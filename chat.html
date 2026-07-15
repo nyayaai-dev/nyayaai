@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Consultation — NyayaAI</title>
+<meta name="description" content="Ask NyayaAI any legal question about Indian law and get a cited, plain-language answer instantly.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>⚠️</span><span>Legal information, not personalised legal advice. Read the full <a href="disclaimer.html" style="text-decoration:underline">disclaimer</a>.</span></div></div>
+
+<header class="site-header">
+  <nav class="navbar wrap">
+    <a href="index.html" class="brand"><span class="mark">न्या</span><span>NyayaAI<span class="tag">AI Legal Consultation · India</span></span></a>
+    <div class="navlinks" id="navlinks">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="chat.html" data-nav="chat.html" class="active">AI Consultation</a>
+      <a href="laws.html" data-nav="laws.html">Practice Areas</a>
+      <a href="news.html" data-nav="news.html">Current Affairs</a>
+      <a href="about.html" data-nav="about.html">About</a>
+    </div>
+    <div class="nav-cta">
+      <button class="navtoggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="chat-shell">
+    <aside class="chat-side">
+      <h4>Practice Areas</h4>
+      <div id="areaChips"></div>
+
+      <h4>Try asking</h4>
+      <button class="quick-prompt" data-prompt="What is the punishment for cheating under the new criminal law?">What is the punishment for cheating under the new criminal law?</button>
+      <button class="quick-prompt" data-prompt="What is Article 21 of the Constitution?">What is Article 21 of the Constitution?</button>
+      <button class="quick-prompt" data-prompt="How do I register a Private Limited Company?">How do I register a Private Limited Company?</button>
+      <button class="quick-prompt" data-prompt="What are my rights if my landlord won't return my security deposit?">Landlord won't return my security deposit</button>
+      <button class="quick-prompt" data-prompt="How does maternity benefit work under the labour codes?">Maternity benefit under the labour codes</button>
+      <button class="quick-prompt" data-prompt="How do I file a consumer complaint against an e-commerce company?">File a consumer complaint online</button>
+
+      <h4>Remember</h4>
+      <p class="small muted">NyayaAI cites current Indian statutes but cannot file court documents, represent you in proceedings, or replace a licensed advocate for case-specific strategy.</p>
+    </aside>
+
+    <main class="chat-main">
+      <div class="chat-header">
+        <div>
+          <strong style="color:var(--ink-100)">NyayaAI Assistant</strong>
+          <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Connecting…</span></div>
+        </div>
+        <a href="about.html" class="btn btn-ghost btn-sm">How this works</a>
+      </div>
+      <div class="chat-log" id="chatLog">
+        <div class="msg-row ai">
+          <div class="avatar ai">AI</div>
+          <div class="bubble">
+            Namaste! I'm <strong>NyayaAI</strong>, your AI legal assistant for Indian law — constitutional, criminal, civil, corporate, family, property, labour, tax, cyber and consumer.
+            <br><br>Tell me what's going on, in your own words, and I'll point you to the relevant law.
+            <span class="cite">This is legal information, not a substitute for a licensed advocate.</span>
+          </div>
+        </div>
+      </div>
+      <form class="chat-input-bar" id="chatForm">
+        <textarea id="chatInput" rows="1" placeholder="Describe your legal question…" autofocus></textarea>
+        <button type="submit" class="send-btn" aria-label="Send">➤</button>
+      </form>
+    </main>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> NyayaAI. Educational legal information platform — not a law firm.</span>
+      <span><a href="disclaimer.html">Disclaimer</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data/laws-data.js"></script>
+<script src="js/data/news-data.js"></script>
+<script src="js/data/insights-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chat.js"></script>
+</body>
+</html>

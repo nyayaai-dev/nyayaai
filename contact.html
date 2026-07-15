@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — NyayaAI</title>
+<meta name="description" content="Get in touch with the NyayaAI team — feedback, corrections, press, or partnerships.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .form-field { margin-bottom: 18px; }
+  .form-field label { display: block; font-size: .82rem; color: var(--ink-400); margin-bottom: 6px; font-weight: 600; }
+  .form-field input, .form-field select, .form-field textarea {
+    width: 100%; background: var(--navy-900); border: 1px solid var(--navy-600); border-radius: 10px;
+    color: var(--ink-100); padding: 12px 14px; font-size: .92rem; font-family: inherit;
+  }
+  .form-field textarea { resize: vertical; min-height: 120px; }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus { outline: none; border-color: var(--ink-100); }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>⚖️</span><span><strong>100% AI-operated.</strong> Legal information, not a substitute for a licensed advocate.</span></div></div>
+
+<header class="site-header">
+  <nav class="navbar wrap">
+    <a href="index.html" class="brand"><span class="mark">न्या</span><span>NyayaAI<span class="tag">AI Legal Consultation · India</span></span></a>
+    <div class="navlinks" id="navlinks">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="chat.html" data-nav="chat.html">AI Consultation</a>
+      <a href="laws.html" data-nav="laws.html">Practice Areas</a>
+      <a href="news.html" data-nav="news.html">Current Affairs</a>
+      <a href="about.html" data-nav="about.html">About</a>
+    </div>
+    <div class="nav-cta">
+      <a href="chat.html" class="btn btn-primary btn-sm">Start Consultation</a>
+      <button class="navtoggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<section class="law-hero">
+  <div class="wrap">
+    <div class="eyebrow">Get in touch</div>
+    <h1>We'd genuinely like to hear from you</h1>
+    <p class="lead" style="max-width:680px">Spotted an outdated section? Found a bug? Have a press or partnership question? This isn't a form that vanishes into a queue — tell us what's going on.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap grid grid-2" style="align-items:flex-start">
+    <div class="card" style="padding:32px">
+      <h2 style="font-size:1.3rem">Send a message</h2>
+      <p class="small muted" style="margin-bottom:22px">This opens your email app with everything pre-filled — we don't have a ticketing system behind this yet, just a real inbox someone reads.</p>
+      <form id="contactForm">
+        <div class="form-field">
+          <label for="cf-reason">What's this about?</label>
+          <select id="cf-reason">
+            <option>General feedback</option>
+            <option>Report an inaccuracy in the legal content</option>
+            <option>Report a bug</option>
+            <option>Press enquiry</option>
+            <option>Partnership / integration enquiry</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="cf-name">Your name</label>
+          <input type="text" id="cf-name" placeholder="So we know who to reply to">
+        </div>
+        <div class="form-field">
+          <label for="cf-email">Your email</label>
+          <input type="email" id="cf-email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-field">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" placeholder="The more specific, the faster we can act on it — e.g. which page, which section, what looked wrong." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Open in email app →</button>
+      </form>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="icon">📍</div>
+        <h3>Where we operate</h3>
+        <p>NyayaAI has no physical branch offices — it's a fully digital platform, built to serve every state and union territory in India equally, wherever you're reading this from.</p>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="icon">🐛</div>
+        <h3>Found something wrong in the legal content?</h3>
+        <p>This matters more to us than any other kind of feedback. Legal information that's out of date or incorrect isn't a minor bug — tell us the exact page and provision, and we'll prioritise it.</p>
+      </div>
+      <div class="card">
+        <div class="icon">💬</div>
+        <h3>Have a legal question, not a platform question?</h3>
+        <p>You're in the wrong place — head to the AI consultation instead, it's faster than waiting on a reply here.</p>
+        <a href="chat.html" class="btn btn-ghost btn-sm" style="margin-top:12px">Go to AI Consultation →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> NyayaAI. Educational legal information platform — not a law firm.</span>
+      <span><a href="disclaimer.html">Disclaimer</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data/laws-data.js"></script>
+<script src="js/data/news-data.js"></script>
+<script src="js/data/insights-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/contact-page.js"></script>
+</body>
+</html>
