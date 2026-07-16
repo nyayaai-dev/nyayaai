@@ -56,9 +56,13 @@ js/insights-page.js       Renders insights.html from insights-data.js
 js/doc-analysis.js        Document Intelligence's local analysis engine (dates, payments, obligations,
                           risky-phrase flags, missing-clause checklist, paragraph diff) — pure text
                           processing, no AI, runs entirely in the browser
-js/documents-page.js      Controller for documents.html — wires the UI to doc-analysis.js, handles the
-                          AI-gated deep-analysis buttons (summarize/explain/suggest), and PDF report
-                          generation via the browser's native print-to-PDF
+js/documents-page.js      Controller for documents.html — wires the UI to doc-analysis.js, handles
+                          PDF/image text extraction (lazy-loading js/vendor/ libraries on upload),
+                          the AI-gated deep-analysis buttons (summarize/explain/suggest), and PDF
+                          report generation via the browser's native print-to-PDF
+js/vendor/                Self-hosted PDF.js (PDF text extraction) and Tesseract.js (image OCR) —
+                          see js/vendor/README.md for versions/licenses; loaded on demand, not on
+                          page load, and only on documents.html
 js/data/laws-data.js      The legal knowledge base (edit this to add/update law content)
 js/data/news-data.js      Seeded current-affairs items + NEWS_CONFIG for a future live feed
 js/data/insights-data.js  Step-by-step practical guides
@@ -94,10 +98,10 @@ server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM
 
 ## AI Document Intelligence — what actually works without a backend
 
-`documents.html` lets you paste or upload (.txt only for now) a contract, NDA, rental agreement,
-employment contract, sale deed, partnership deed, court order, or legal notice. Several features are
-**genuinely functional today with zero AI backend**, because they're real text processing on your
-actual document, not fabricated output:
+`documents.html` lets you paste or upload a contract, NDA, rental agreement, employment contract,
+sale deed, partnership deed, court order, or legal notice — as pasted text, a `.txt` file, a `.pdf`,
+or a `.jpg`/`.png` photo or scan. Several features are **genuinely functional today with zero AI
+backend**, because they're real text processing on your actual document, not fabricated output:
 
 - Extracting dates, payment amounts, and obligation-language sentences
 - Flagging phrases commonly worth a closer look (indemnification, liquidated damages, sole discretion,
@@ -106,6 +110,20 @@ actual document, not fabricated output:
 - Comparing two documents paragraph-by-paragraph (a real LCS diff, not an approximation)
 - A composite "executive summary" built from the above (not AI-written prose, but not fake either)
 - Generating a PDF report via the browser's own print-to-PDF
+
+**Uploading a PDF or image** extracts real text before any of the above runs, entirely on-device:
+- **`.pdf`** — exact text extraction via a locally-vendored PDF.js (`js/vendor/pdfjs/`), no OCR
+  guessing involved. If a PDF is actually a scanned image with no selectable text, that's flagged so
+  you know to re-upload it as a photo instead.
+- **`.jpg` / `.png`** — real optical character recognition via a locally-vendored Tesseract.js
+  (`js/vendor/tesseract/`), which downloads its ~10MB OCR engine once, on demand, only when you
+  upload an image. Unlike PDF text, OCR output is machine-read and can misread words — the result is
+  labeled as such, with a prompt to double-check it against the original photo, especially for
+  numbers, dates, and signatures.
+
+Both run entirely in the browser via files served from this same site (see `js/vendor/README.md`
+for exact versions/licenses) — no CDN calls, nothing uploaded anywhere, consistent with the rest of
+this page's "processed locally" claim.
 
 **Summarize / Explain every paragraph / Suggest improvements** are the exception — those need genuine
 language understanding, so they're gated exactly like the chat: with `AI_CONFIG.apiEndpoint` unset,

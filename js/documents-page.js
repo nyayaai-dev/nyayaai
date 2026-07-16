@@ -48,18 +48,106 @@
     });
   });
 
-  // ---------- File upload (.txt) ----------
+  // ---------- File upload (.txt / .pdf / .jpg / .jpeg / .png) ----------
+  // PDF and image (OCR) libraries are vendored locally (js/vendor/) and loaded on demand —
+  // only when someone actually uploads a PDF or image — so a plain .txt/paste workflow never
+  // pays for them. Nothing is fetched from a CDN or uploaded anywhere; everything runs on-device.
   const docFile = document.getElementById("docFile");
   const docText = document.getElementById("docText");
+  const uploadStatus = document.getElementById("uploadStatus");
+
+  function loadScriptOnce(src) {
+    return new Promise(function (resolve, reject) {
+      if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = function () { resolve(); };
+      s.onerror = function () { reject(new Error("Failed to load " + src)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function wordCount(str) {
+    const trimmed = str.trim();
+    return trimmed ? trimmed.split(/\s+/).length : 0;
+  }
+
+  async function extractTextFromPDF(file) {
+    await loadScriptOnce("js/vendor/pdfjs/pdf.min.js");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "js/vendor/pdfjs/pdf.worker.min.js";
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    let text = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(function (it) { return it.str; }).join(" ") + "\n\n";
+    }
+    return text.trim();
+  }
+
+  async function extractTextFromImage(file, onProgress) {
+    await loadScriptOnce("js/vendor/tesseract/tesseract.min.js");
+    const worker = await Tesseract.createWorker("eng", 1, {
+      langPath: "js/vendor/tesseract",
+      corePath: "js/vendor/tesseract/tesseract-core-simd-lstm.wasm.js",
+      workerPath: "js/vendor/tesseract/worker.min.js",
+      workerBlobURL: false,
+      logger: onProgress
+    });
+    const result = await worker.recognize(file);
+    await worker.terminate();
+    return result.data.text.trim();
+  }
+
   docFile.addEventListener("change", function () {
     const file = docFile.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function (e) { docText.value = e.target.result; };
-    reader.readAsText(file);
+    const name = file.name.toLowerCase();
+
+    if (name.endsWith(".txt")) {
+      const reader = new FileReader();
+      reader.onload = function (e) { docText.value = e.target.result; };
+      reader.readAsText(file);
+      if (uploadStatus) uploadStatus.textContent = "";
+      return;
+    }
+
+    if (name.endsWith(".pdf")) {
+      if (uploadStatus) uploadStatus.textContent = "Extracting text from PDF…";
+      extractTextFromPDF(file).then(function (text) {
+        docText.value = text;
+        uploadStatus.textContent = text
+          ? "✅ Extracted " + wordCount(text) + " words from the PDF — exact text, not OCR guesswork."
+          : "⚠️ No selectable text found in this PDF — it's probably a scanned image. Try re-uploading it as a .jpg/.png for OCR instead.";
+      }).catch(function (err) {
+        console.error("[NyayaAI] PDF extraction failed:", err);
+        if (uploadStatus) uploadStatus.textContent = "⚠️ Couldn't read this PDF. Try copy-pasting the text instead.";
+      });
+      return;
+    }
+
+    if (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png")) {
+      if (uploadStatus) uploadStatus.textContent = "Loading OCR engine (first time only, ~10MB)…";
+      extractTextFromImage(file, function (m) {
+        if (!uploadStatus || !m || !m.status) return;
+        uploadStatus.textContent = m.status + (typeof m.progress === "number" ? " — " + Math.round(m.progress * 100) + "%" : "");
+      }).then(function (text) {
+        docText.value = text;
+        uploadStatus.textContent = text
+          ? "✅ OCR extracted " + wordCount(text) + " words. This is machine-read text, not exact — review it against the photo before relying on it, especially for numbers, dates, and signatures."
+          : "⚠️ OCR couldn't find readable text in this image — try a clearer, well-lit photo, or type/paste the text instead.";
+      }).catch(function (err) {
+        console.error("[NyayaAI] OCR failed:", err);
+        if (uploadStatus) uploadStatus.textContent = "⚠️ OCR failed to run. Try a clearer photo, or type/paste the text instead.";
+      });
+      return;
+    }
+
+    if (uploadStatus) uploadStatus.textContent = "⚠️ Unsupported file type — use .txt, .pdf, .jpg, or .png.";
   });
 
-  // ---------- "Why .txt only" note ----------
+  // ---------- "Why not DOCX" note ----------
   const whyLink = document.getElementById("whyTxtLink");
   if (whyLink) {
     whyLink.addEventListener("click", function (e) {
@@ -67,7 +155,7 @@
       if (whyLink.dataset.expanded) return;
       whyLink.dataset.expanded = "1";
       whyLink.insertAdjacentHTML("afterend",
-        ' <span class="small muted">— reading PDF/DOCX text reliably in-browser needs a fairly heavy parsing library; supporting it is on the roadmap. For now, open your document, select all, copy, and paste the text above.</span>');
+        ' <span class="small muted">— PDF text extraction (pdf.js) and image OCR (Tesseract.js) both run entirely in your browser, no upload involved; the libraries download once, on demand, the first time you use them. PDF text is exact. Image OCR is machine-read and can misread words, especially handwriting or low-quality photos — always double-check it. DOCX (Word) files use a more complex format that a lightweight in-browser parser can\'t reliably read yet — open it, select all, copy, and paste the text above, or save/export it as a PDF and upload that instead.</span>');
     });
   }
 
