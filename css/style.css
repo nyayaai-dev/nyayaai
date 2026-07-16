@@ -472,3 +472,9 @@ textarea.wizard-input { resize: vertical; min-height: 100px; line-height: 1.5; }
   background: var(--navy-900); border: 1px solid var(--navy-600); border-radius: var(--radius-md);
   padding: 22px; margin-top: 14px; max-height: 520px; overflow-y: auto;
 }
+
+/* ---------- Legal Cost Calculator ---------- */
+.cost-table { margin-top: 16px; }
+.cost-table th, .cost-table td { vertical-align: top; }
+.cost-table td:not(:first-child), .cost-table th:not(:first-child) { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cost-total-row td { border-top: 2px solid var(--ink-100); border-bottom: none; padding-top: 14px; }

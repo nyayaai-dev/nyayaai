@@ -42,6 +42,7 @@
       const inserts = [
         { navKey: "documents.html", text: "Documents", beforeKey: "laws.html" },
         { navKey: "forms.html", text: "Forms", beforeKey: "laws.html" },
+        { navKey: "costs.html", text: "Costs", beforeKey: "laws.html" },
         { navKey: "insights.html", text: "Insights", beforeKey: "about.html" }
       ];
 
@@ -71,6 +72,7 @@
           const wanted = [
             ["documents.html", "Document Intelligence"],
             ["forms.html", "Smart Legal Forms"],
+            ["costs.html", "Cost Calculator"],
             ["insights.html", "Insights &amp; Guides"],
             ["faq.html", "FAQ"],
             ["contact.html", "Contact"]
@@ -89,7 +91,7 @@
           return s.querySelector('a[href$="disclaimer.html"]');
         });
         if (disclaimerSpan) {
-          const wanted = [["documents.html", "Documents"], ["forms.html", "Forms"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
+          const wanted = [["documents.html", "Documents"], ["forms.html", "Forms"], ["costs.html", "Costs"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
           wanted.forEach(function (pair) {
             if (!bottom.querySelector('a[href$="' + pair[0] + '"]')) {
               disclaimerSpan.insertAdjacentHTML("beforeend", ' · <a href="' + p(pair[0]) + '">' + pair[1] + "</a>");
@@ -140,6 +142,11 @@
         if (typeof FORMS_DATA !== "undefined") {
           FORMS_DATA.forEach(function (f) {
             items.push({ type: "Form", title: f.name + " (Smart Form)", sub: f.tagline, href: p("forms.html") });
+          });
+        }
+        if (typeof COSTS_DATA !== "undefined") {
+          COSTS_DATA.forEach(function (c) {
+            items.push({ type: "Cost estimate", title: c.name + " — cost estimate", sub: c.tagline, href: p("costs.html") });
           });
         }
         return items;

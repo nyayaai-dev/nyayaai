@@ -4,7 +4,8 @@ A fully static (no build step) website: an AI-operated legal information platfor
 practice areas of Indian law (Constitutional, Criminal (BNS/BNSS/BSA), Civil, Corporate, Family,
 Property, Labour, Tax, Cyber, Consumer, Intellectual Property, Banking & Finance, Traffic & Road
 Law), plus a curated Current Affairs feed, practical step-by-step guides, an AI Document
-Intelligence tool, 8 Smart Legal Forms wizards, site-wide search, and an FAQ/Contact section.
+Intelligence tool, 8 Smart Legal Forms wizards, a Legal Cost Calculator, site-wide search, and an
+FAQ/Contact section.
 
 Design: monochrome (black/white/gray) throughout — see `css/style.css`.
 
@@ -26,6 +27,7 @@ index.html            Landing page
 chat.html              AI consultation chat UI
 documents.html          AI Document Intelligence — analyze/compare contracts, NDAs, rental agreements, etc.
 forms.html               Smart Legal Forms — 8 guided wizards that draft documents/checklists from your answers
+costs.html               Legal Cost Calculator — lawyer/court/registration/government fees & stamp duty, as ranges
 laws.html               Practice-area hub (grid of all 13 categories)
 laws/<category>.html    13 thin page shells — all content is rendered by js/law-page.js from laws-data.js
 news.html               Current-affairs feed
@@ -61,6 +63,10 @@ js/forms-engine.js        Smart Legal Forms' generation logic — jurisdiction t
 js/forms-page.js          Controller for forms.html — drives the step-by-step wizard (incl. conditional
                           steps), validates answers, renders the generated output + PDF export
 js/data/forms-data.js     Question definitions for all 8 form wizards
+js/costs-engine.js        Legal Cost Calculator's estimation logic — MCA fee slabs, trademark e-filing
+                          fees, ad valorem court fee ranges, stamp duty ranges, lawyer fee ranges
+js/costs-page.js          Controller for costs.html — matter picker, inline inputs, results table
+js/data/costs-data.js     Matter-type + input-field definitions for all 9 cost calculators
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
@@ -105,6 +111,24 @@ jurisdiction/fee/threshold rule, is a deterministic task once the branching logi
 Every generated draft is clearly labelled as a starting point, not a certified or filed legal
 document — see the disclaimer on `forms.html` itself. Add new forms by extending `js/data/forms-data.js`
 (questions, with optional `showIf` branching) and adding a generator function to `js/forms-engine.js`.
+
+## Legal Cost Calculator — ranges and averages, not fake precision
+
+`costs.html` estimates lawyer fees, court fees, registration costs, government fees, and stamp duty
+for 9 common situations (Property Purchase/Sale, Civil Suit, Company Registration, Trademark Filing,
+Consumer Complaint, Divorce, Criminal Case Defense, GST Registration, Legal Notice). Every category is
+shown as a **Low / Average / High** row plus a total estimated range, deliberately — court fees, stamp
+duty, and especially lawyer fees genuinely vary by state, city, and advocate, so a single number would
+be misleadingly precise.
+
+Two kinds of figures are mixed in deliberately:
+- **Fixed government rates** (MCA incorporation fee slabs, IP India trademark e-filing fees, GST
+  registration being free) are cited, current official rates — shown as a "range" only for table
+  consistency (low = high).
+- **Everything else** (stamp duty, ad valorem court fees, lawyer/CA fees) is an illustrative range
+  compiled from commonly published sources, clearly caveated as needing confirmation with your
+  advocate, Sub-Registrar, or court. Add new matter types by extending `js/data/costs-data.js` and
+  adding a calculator function to `js/costs-engine.js`.
 
 ## Notable behavior worth knowing about
 
