@@ -62,7 +62,10 @@
         <div class="doc-input-row">
           <div class="form-field" style="flex:1;min-width:220px">
             <label for="docType">Document type</label>
-            <select id="docType"></select>
+            <div style="display:flex;gap:8px">
+              <select id="docType" style="flex:1"></select>
+              <button type="button" class="btn btn-ghost btn-sm" id="detectTypeBtn" title="AI-style classification — keyword scoring, not a trained model">🔍 Detect</button>
+            </div>
           </div>
           <div class="form-field" style="flex:1;min-width:220px">
             <label for="docFile">Or upload a .txt, .pdf, .jpg, or .png file</label>
@@ -117,6 +120,11 @@
           <div class="card doc-result-card">
             <h3>🗂️ Clause Outline</h3>
             <div id="outlineResults"></div>
+          </div>
+          <div class="card doc-result-card">
+            <h3>🏷️ Named Entities</h3>
+            <p class="small muted" style="margin-bottom:10px">Pattern-based extraction — not a trained NER model. Verify manually.</p>
+            <div id="entitiesResults"></div>
           </div>
         </div>
 

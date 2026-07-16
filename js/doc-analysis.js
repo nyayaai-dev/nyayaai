@@ -138,6 +138,49 @@ const DocAnalysis = (function () {
     return { docTypeName: docType.name, present: present, missing: missing };
   }
 
+  // ---------- Named Entity Recognition (regex/list-based — not a trained NER model) ----------
+  function uniqTrimmed(arr) {
+    return Array.from(new Set(arr.map(function (s) { return s.replace(/\s+/g, " ").trim(); }))).filter(Boolean);
+  }
+
+  const PERSON_REGEX = /\b(?:Mr\.?|Mrs\.?|Ms\.?|Shri|Smt\.?|Dr\.?)\s+[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,3}/g;
+  const ORG_REGEX = /\b[A-Z][A-Za-z0-9&.,\s]{2,60}?\s(?:Pvt\.?\s?Ltd\.?|Private Limited|LLP|Ltd\.?|Limited|Inc\.?|Corporation|Corp\.?)/g;
+  const DEFINED_PARTY_REGEX = /\(["“]([A-Z][a-zA-Z\s]{1,30})["”]\)/g;
+
+  function extractNamedEntities(text) {
+    const persons = uniqTrimmed(text.match(PERSON_REGEX) || []);
+    const organizations = uniqTrimmed(text.match(ORG_REGEX) || []);
+
+    const definedTerms = [];
+    let dm;
+    DEFINED_PARTY_REGEX.lastIndex = 0;
+    while ((dm = DEFINED_PARTY_REGEX.exec(text)) !== null) definedTerms.push(dm[1]);
+
+    const locations = INDIAN_PLACES.filter(function (place) {
+      return new RegExp("\\b" + place.replace(/\s+/g, "\\s+") + "\\b", "i").test(text);
+    });
+
+    return {
+      persons: persons.slice(0, 15),
+      organizations: organizations.slice(0, 15),
+      definedTerms: uniqTrimmed(definedTerms).slice(0, 15),
+      locations: locations.slice(0, 15)
+    };
+  }
+
+  // ---------- Document-type classification (keyword-overlap scoring — not a trained classifier) ----------
+  function classifyDocumentType(text) {
+    const lower = text.toLowerCase();
+    return Object.keys(CLASSIFY_KEYWORDS).map(function (id) {
+      let score = 0;
+      CLASSIFY_KEYWORDS[id].forEach(function (kw) {
+        if (lower.indexOf(kw) !== -1) score += kw.split(" ").length;
+      });
+      const docType = DOCUMENT_TYPES.find(function (d) { return d.id === id; });
+      return { id: id, name: docType ? docType.name : id, score: score };
+    }).sort(function (a, b) { return b.score - a.score; });
+  }
+
   // ---------- Word/paragraph stats ----------
   function stats(text) {
     const words = text.trim().split(/\s+/).filter(Boolean);
@@ -199,6 +242,8 @@ const DocAnalysis = (function () {
     detectClauseOutline: detectClauseOutline,
     detectRiskyPhrases: detectRiskyPhrases,
     detectMissingClauses: detectMissingClauses,
+    extractNamedEntities: extractNamedEntities,
+    classifyDocumentType: classifyDocumentType,
     stats: stats,
     diffDocuments: diffDocuments,
     buildExecutiveSummary: buildExecutiveSummary

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Technologies — NyayaAI</title>
+<meta name="description" content="An honest status page for every AI technology behind NyayaAI: what runs for real, entirely on your device, and what needs a connected AI backend to actually do anything.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>⚖️</span><span><strong>An honest status page.</strong> Some of this runs for real, entirely on your device. Some needs a connected AI backend to do anything — marked clearly below, not blurred together.</span></div></div>
+
+<header class="site-header">
+  <nav class="navbar wrap">
+    <a href="index.html" class="brand"><span class="mark">न्या</span><span>NyayaAI<span class="tag">AI Legal Consultation · India</span></span></a>
+    <div class="navlinks" id="navlinks">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="chat.html" data-nav="chat.html">AI Consultation</a>
+      <a href="documents.html" data-nav="documents.html">Documents</a>
+      <a href="forms.html" data-nav="forms.html">Forms</a>
+      <a href="costs.html" data-nav="costs.html">Costs</a>
+      <a href="ip-tools.html" data-nav="ip-tools.html">IP Tools</a>
+      <a href="notifications.html" data-nav="notifications.html">Reminders</a>
+      <a href="laws.html" data-nav="laws.html">Practice Areas</a>
+      <a href="news.html" data-nav="news.html">Current Affairs</a>
+      <a href="about.html" data-nav="about.html">About</a>
+    </div>
+    <div class="nav-cta">
+      <a href="chat.html" class="btn btn-primary btn-sm">Start Consultation</a>
+      <button class="navtoggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<section class="law-hero">
+  <div class="wrap">
+    <div class="eyebrow">AI Technologies</div>
+    <h1>What's actually running under the hood</h1>
+    <p class="lead" style="max-width:760px">NyayaAI is built from a mix of genuine on-device AI/ML-style techniques and features that would need a connected LLM backend to be real. This page catalogs both kinds honestly, instead of letting "AI-powered" branding blur the line between them.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="alert warn">
+      <div class="ico">📌</div>
+      <p><strong>How to read the badges.</strong> <span class="pill green" style="margin:0 4px">✅ Live & local</span> means the feature genuinely runs, right now, in your browser — no server, no API key, nothing fabricated. <span class="pill red" style="margin:0 4px">🔌 Needs a backend</span> means the feature is real technology that requires a connected LLM/AI API to function — this site ships the honest scaffolding and instructions for it (see <a href="#connect" style="text-decoration:underline;color:var(--gold-400)">below</a>), but doesn't fake the output when no backend is connected.</p>
+    </div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <h2>Live &amp; local — running right now, on your device</h2>
+    <div class="grid grid-2" id="liveGrid" style="margin-top:20px"></div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <h2 id="connect">Needs a connected AI backend</h2>
+    <p class="lead" style="max-width:700px">These are genuine AI techniques — this site just doesn't have a live LLM/API connection by default, so it doesn't pretend to run them. Connect one (see <a href="README.md" style="text-decoration:underline;color:var(--gold-400)">README.md</a>) and these switch on automatically, using the same UI already in place.</p>
+    <div class="grid grid-2" id="gatedGrid" style="margin-top:20px"></div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="card center" style="padding:36px">
+      <h3>Want the full picture?</h3>
+      <p>The README documents exactly how each of these works, file by file — including how to wire up a real LLM backend for the gated ones.</p>
+      <a href="chat.html?q=How%20does%20NyayaAI%27s%20AI%20actually%20work" class="btn btn-primary">💬 Ask NyayaAI →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> NyayaAI. Educational legal information platform — not a law firm.</span>
+      <span><a href="disclaimer.html">Disclaimer</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data/laws-data.js"></script>
+<script src="js/data/news-data.js"></script>
+<script src="js/data/insights-data.js"></script>
+<script src="js/notifications-engine.js"></script>
+<script src="js/main.js"></script>
+<script src="js/ai-technologies-page.js"></script>
+</body>
+</html>

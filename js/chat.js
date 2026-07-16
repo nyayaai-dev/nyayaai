@@ -70,6 +70,19 @@ const DISCLAIMER_LINE =
     row.appendChild(bubble);
     log.appendChild(row);
     log.scrollTop = log.scrollHeight;
+    if (role === "ai" && typeof window.speechSynthesis !== "undefined") {
+      const speakBtn = el("button", "speak-btn", "🔊");
+      speakBtn.type = "button";
+      speakBtn.setAttribute("aria-label", "Read this answer aloud");
+      speakBtn.title = "Read aloud — runs on your device, via your browser's text-to-speech";
+      speakBtn.addEventListener("click", function () {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(bubble.innerText || bubble.textContent);
+        utter.lang = "en-IN";
+        window.speechSynthesis.speak(utter);
+      });
+      bubble.appendChild(speakBtn);
+    }
     return bubble;
   }
 
@@ -279,6 +292,52 @@ const DISCLAIMER_LINE =
     input.style.height = "auto";
     input.style.height = Math.min(input.scrollHeight, 120) + "px";
   });
+
+  // ---------- Speech recognition (dictate) ----------
+  // Uses the browser's built-in Web Speech API. In Chrome/Edge this is NOT purely on-device —
+  // the browser vendor's own servers do the speech-to-text processing (the audio never touches
+  // NyayaAI's code or any NyayaAI server, but it isn't private from the browser vendor either,
+  // unlike the OCR/TTS features on this site). The mic button and its tooltip say this plainly.
+  const micBtn = document.getElementById("micBtn");
+  const micHint = document.getElementById("micHint");
+  const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (micBtn) {
+    if (!SpeechRecognitionCtor) {
+      micBtn.style.display = "none";
+    } else {
+      const recognition = new SpeechRecognitionCtor();
+      recognition.lang = "en-IN";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      let listening = false;
+
+      micBtn.addEventListener("click", function () {
+        if (listening) { recognition.stop(); return; }
+        try {
+          recognition.start();
+          listening = true;
+          micBtn.classList.add("listening");
+          if (micHint) micHint.style.display = "block";
+        } catch (err) { /* recognition already running */ }
+      });
+      recognition.onresult = function (e) {
+        const transcript = e.results[0][0].transcript;
+        input.value = (input.value ? input.value + " " : "") + transcript;
+        input.dispatchEvent(new Event("input"));
+        input.focus();
+      };
+      recognition.onerror = function () {
+        listening = false;
+        micBtn.classList.remove("listening");
+        if (micHint) micHint.style.display = "none";
+      };
+      recognition.onend = function () {
+        listening = false;
+        micBtn.classList.remove("listening");
+        if (micHint) micHint.style.display = "none";
+      };
+    }
+  }
 
   document.querySelectorAll(".quick-prompt, .area-chip[data-prompt]").forEach(function (btn) {
     btn.addEventListener("click", function () {

@@ -68,8 +68,10 @@
       </div>
       <form class="chat-input-bar" id="chatForm">
         <textarea id="chatInput" rows="1" placeholder="Describe your legal question…" autofocus></textarea>
+        <button type="button" class="mic-btn" id="micBtn" aria-label="Dictate your question" title="Dictate — uses your browser's built-in speech recognition, which may send audio to your browser vendor's servers for processing">🎤</button>
         <button type="submit" class="send-btn" aria-label="Send">➤</button>
       </form>
+      <p class="small muted" id="micHint" style="display:none;margin-top:8px">🎤 Listening… speak your question.</p>
     </main>
   </div>
 </div>

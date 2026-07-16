@@ -120,6 +120,31 @@ const DOCUMENT_TYPES = [
   }
 ];
 
+// Keyword sets used by DocAnalysis.classifyDocumentType() to guess a document's type from its
+// text (keyword-overlap scoring, same approach as the IP Toolkit's class finder) — not a trained
+// ML classifier, just a fast first guess you can override via the dropdown.
+const CLASSIFY_KEYWORDS = {
+  contract: ["agreement", "party of the first part", "party of the second part", "consideration", "covenants", "in witness whereof"],
+  nda: ["confidential information", "non-disclosure", "confidentiality agreement", "disclosing party", "receiving party"],
+  rental: ["landlord", "tenant", "lessor", "lessee", "rent", "lease", "premises", "security deposit"],
+  employment: ["employee", "employer", "salary", "designation", "probation", "ctc", "notice period", "resignation", "appointment letter"],
+  "sale-deed": ["vendor", "vendee", "sale deed", "sale consideration", "conveyance", "immovable property", "title deed"],
+  "partnership-deed": ["partner", "partnership firm", "profit sharing", "capital contribution", "partnership deed", "managing partner"],
+  "court-order": ["hon'ble court", "petitioner", "respondent", "judgment", "hereby ordered", "in the matter of", "appellant"],
+  "legal-notice": ["legal notice", "hereby called upon", "notice is hereby given", "failing which", "advocate for", "on behalf of my client"]
+};
+
+// Seeded list used by DocAnalysis.extractNamedEntities() to flag Indian place names —
+// simple whole-word matching against a known list, not a trained NER model.
+const INDIAN_PLACES = [
+  "Mumbai", "Delhi", "New Delhi", "Bengaluru", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune",
+  "Ahmedabad", "Jaipur", "Lucknow", "Chandigarh", "Surat", "Nagpur", "Indore", "Bhopal", "Patna",
+  "Gurugram", "Gurgaon", "Noida", "Kochi", "Coimbatore", "Visakhapatnam", "Vadodara", "Nashik",
+  "Faridabad", "Ghaziabad", "Thane", "Maharashtra", "Karnataka", "Tamil Nadu", "Telangana", "Gujarat",
+  "Rajasthan", "Uttar Pradesh", "West Bengal", "Punjab", "Haryana", "Kerala", "Bihar", "Madhya Pradesh",
+  "Odisha", "Andhra Pradesh", "Assam", "Jharkhand", "Chhattisgarh", "Uttarakhand", "Goa"
+];
+
 // Phrases commonly worth a closer look in Indian contracts — flagged descriptively,
 // not as a verdict. Presence isn't inherently bad; it's a prompt to read that clause
 // carefully (or run it past an advocate) rather than skim past it.

@@ -45,6 +45,7 @@
         { navKey: "costs.html", text: "Costs", beforeKey: "laws.html" },
         { navKey: "ip-tools.html", text: "IP Tools", beforeKey: "laws.html" },
         { navKey: "notifications.html", text: "Reminders", beforeKey: "laws.html" },
+        { navKey: "ai-technologies.html", text: "AI Tech", beforeKey: "about.html" },
         { navKey: "insights.html", text: "Insights", beforeKey: "about.html" }
       ];
 
@@ -77,6 +78,7 @@
             ["costs.html", "Cost Calculator"],
             ["ip-tools.html", "IP Toolkit"],
             ["notifications.html", "Smart Notifications"],
+            ["ai-technologies.html", "AI Technologies"],
             ["insights.html", "Insights &amp; Guides"],
             ["faq.html", "FAQ"],
             ["contact.html", "Contact"]
@@ -95,7 +97,7 @@
           return s.querySelector('a[href$="disclaimer.html"]');
         });
         if (disclaimerSpan) {
-          const wanted = [["documents.html", "Documents"], ["forms.html", "Forms"], ["costs.html", "Costs"], ["ip-tools.html", "IP Tools"], ["notifications.html", "Reminders"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
+          const wanted = [["documents.html", "Documents"], ["forms.html", "Forms"], ["costs.html", "Costs"], ["ip-tools.html", "IP Tools"], ["notifications.html", "Reminders"], ["ai-technologies.html", "AI Tech"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
           wanted.forEach(function (pair) {
             if (!bottom.querySelector('a[href$="' + pair[0] + '"]')) {
               disclaimerSpan.insertAdjacentHTML("beforeend", ' · <a href="' + p(pair[0]) + '">' + pair[1] + "</a>");
@@ -155,6 +157,7 @@
         }
         items.push({ type: "Tool", title: "Smart Notifications — Reminders", sub: "Court dates, consultation reminders, document expiry, compliance deadlines", href: p("notifications.html") });
         items.push({ type: "Tool", title: "IP Toolkit — Trademark Similarity Checker", sub: "AI-style trademark search, class finder, copyright & patent guidance, brand protection", href: p("ip-tools.html") });
+        items.push({ type: "Tool", title: "AI Technologies", sub: "Honest status of every AI technique on the site — OCR, speech, NER, classification, RAG, and more", href: p("ai-technologies.html") });
         return items;
       }
       const INDEX = buildIndex();

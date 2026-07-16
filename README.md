@@ -4,10 +4,12 @@ A fully static (no build step) website: an AI-operated legal information platfor
 practice areas of Indian law (Constitutional, Criminal (BNS/BNSS/BSA), Civil, Corporate, Family,
 Property, Labour, Tax, Cyber, Consumer, Intellectual Property, Banking & Finance, Traffic & Road
 Law), plus a curated Current Affairs feed, practical step-by-step guides, an AI Document
-Intelligence tool, 8 Smart Legal Forms wizards, a Legal Cost Calculator, Smart Notifications
+Intelligence tool (now with PDF/image upload, OCR, named entity recognition, and document-type
+classification), 8 Smart Legal Forms wizards, a Legal Cost Calculator, Smart Notifications
 (court/consultation/compliance reminders with rule-based recommendations), an IP Toolkit
-(trademark similarity checker, class finder, copyright/patent guidance, brand protection),
-site-wide search, and an FAQ/Contact section. English only.
+(trademark similarity checker, class finder, copyright/patent guidance, brand protection), an
+[AI Technologies](ai-technologies.html) status page, speech recognition and text-to-speech in
+AI Consultation, site-wide search, and an FAQ/Contact section. English only.
 
 Design: monochrome (black/white/gray) throughout — see `css/style.css`.
 
@@ -34,6 +36,8 @@ notifications.html       Smart Notifications — court/consultation reminders, d
                           deadlines, and rule-based recommendations, all stored in browser localStorage
 ip-tools.html            IP Toolkit — trademark similarity checker, trademark class finder, copyright
                           guidance, patent guidance with a patentability quick-check, and brand protection
+ai-technologies.html     Honest status catalog of every AI/ML-style technique on the site — what's
+                          genuinely live and local vs. what needs a connected AI backend
 laws.html               Practice-area hub (grid of all 13 categories)
 laws/<category>.html    13 thin page shells — all content is rendered by js/law-page.js from laws-data.js
 news.html               Current-affairs feed
@@ -92,6 +96,8 @@ js/ip-tools-page.js       Controller for ip-tools.html — tabs, similarity chec
 js/data/trademark-database.js   Seeded reference data: the 45-class NICE classification (with keywords
                           for the class finder) and ~80 real, well-known Indian trademarks used only as
                           a comparison set for the similarity checker demo
+js/ai-technologies-page.js   Controller + inline content for ai-technologies.html — the honest
+                          live-vs-backend-gated status catalog for every AI technique on the site
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
@@ -109,6 +115,12 @@ backend**, because they're real text processing on your actual document, not fab
 - Checking for commonly-expected clauses that seem to be missing, per document type
 - Comparing two documents paragraph-by-paragraph (a real LCS diff, not an approximation)
 - A composite "executive summary" built from the above (not AI-written prose, but not fake either)
+- **Named Entity Recognition**: pattern/list-based extraction of persons, organizations, defined
+  parties (e.g. `("Landlord")`), and Indian locations — `DocAnalysis.extractNamedEntities()`, driven
+  by `CLASSIFY_KEYWORDS`/`INDIAN_PLACES` in `js/data/document-checklists.js`. Not a trained NER model.
+- **AI-style classification**: the "🔍 Detect" button next to the document-type dropdown guesses the
+  type from pasted/uploaded text via keyword-overlap scoring — `DocAnalysis.classifyDocumentType()`,
+  the same technique the IP Toolkit's class finder uses. Not a trained classifier.
 - Generating a PDF report via the browser's own print-to-PDF
 
 **Uploading a PDF or image** extracts real text before any of the above runs, entirely on-device:
@@ -224,6 +236,26 @@ checker. The topbar and an in-page alert both say plainly what's real and what i
 
 Add more reference trademarks or classes by extending `js/data/trademark-database.js`; the similarity
 threshold, scoring, and phonetic algorithm all live in `js/ip-tools-engine.js`.
+
+## AI Technologies — [ai-technologies.html](ai-technologies.html) is the honest index
+
+That page catalogs every AI/ML-adjacent technique on the site with a clear ✅ live-and-local vs.
+🔌 needs-a-backend badge, so "AI-powered" branding doesn't blur genuinely-running local features
+together with ones that are only real once a backend is connected. Two more live-and-local pieces,
+not covered elsewhere in this README:
+
+- **Speech recognition** (dictate into AI Consultation via the 🎤 button) uses the browser's native
+  Web Speech API. Caveat, stated in the UI itself: in Chrome/Edge this sends audio to the browser
+  vendor's own servers for transcription — it never touches NyayaAI's code or any NyayaAI server,
+  but unlike the OCR/TTS features it isn't purely on-device either. The button is hidden entirely in
+  browsers that don't support the API (progressive enhancement, no broken UI).
+- **Text-to-speech** (🔊 "read aloud" on any AI Consultation answer) uses `speechSynthesis` — genuinely
+  on-device in effectively all browser implementations, no network call.
+
+LLM-powered Q&A, Retrieval-Augmented Generation, true semantic embeddings, and AI summarization are
+all shown on that page as requiring a connected backend — see "The AI chat... currently run in demo
+mode" below for exactly how to wire one up. AI translation was evaluated and intentionally not built
+(see git history) — the site is English-only by design for now.
 
 ## Notable behavior worth knowing about
 
