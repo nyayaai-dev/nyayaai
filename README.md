@@ -5,8 +5,9 @@ practice areas of Indian law (Constitutional, Criminal (BNS/BNSS/BSA), Civil, Co
 Property, Labour, Tax, Cyber, Consumer, Intellectual Property, Banking & Finance, Traffic & Road
 Law), plus a curated Current Affairs feed, practical step-by-step guides, an AI Document
 Intelligence tool, 8 Smart Legal Forms wizards, a Legal Cost Calculator, Smart Notifications
-(court/consultation/compliance reminders with rule-based recommendations), site-wide search, and
-an FAQ/Contact section.
+(court/consultation/compliance reminders with rule-based recommendations), an IP Toolkit
+(trademark similarity checker, class finder, copyright/patent guidance, brand protection),
+site-wide search, and an FAQ/Contact section.
 
 Design: monochrome (black/white/gray) throughout — see `css/style.css`.
 
@@ -31,6 +32,8 @@ forms.html               Smart Legal Forms — 8 guided wizards that draft docum
 costs.html               Legal Cost Calculator — lawyer/court/registration/government fees & stamp duty, as ranges
 notifications.html       Smart Notifications — court/consultation reminders, document expiry, compliance
                           deadlines, and rule-based recommendations, all stored in browser localStorage
+ip-tools.html            IP Toolkit — trademark similarity checker, trademark class finder, copyright
+                          guidance, patent guidance with a patentability quick-check, and brand protection
 laws.html               Practice-area hub (grid of all 13 categories)
 laws/<category>.html    13 thin page shells — all content is rendered by js/law-page.js from laws-data.js
 news.html               Current-affairs feed
@@ -77,6 +80,14 @@ js/notifications-page.js  Controller for notifications.html — permission UI, a
                           compliance quick-add, recommendations panel, and the grouped upcoming list
 js/data/compliance-deadlines.js   Recurring statutory deadline templates (ITR, advance tax, GSTR-3B,
                           ROC filings) used by the quick-add panel to compute the next occurrence
+js/ip-tools-engine.js     IP Toolkit's logic — Levenshtein similarity + a simplified phonetic key for
+                          the trademark similarity checker, keyword matching for the class finder, and
+                          a rule-based screen against the Patents Act §3 exclusions
+js/ip-tools-page.js       Controller for ip-tools.html — tabs, similarity checker, class finder,
+                          patentability quick-check, and the trademark-renewal reminder cross-link
+js/data/trademark-database.js   Seeded reference data: the 45-class NICE classification (with keywords
+                          for the class finder) and ~80 real, well-known Indian trademarks used only as
+                          a comparison set for the similarity checker demo
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
@@ -168,6 +179,33 @@ disclosed up front in the page's topbar and an explainer alert, not buried in a 
 Add a new recurring compliance deadline by extending the `COMPLIANCE_DEADLINES` array in
 `js/data/compliance-deadlines.js`; add a new cross-link by calling `NotificationsEngine.addReminder(...)`
 from any page that already loads `js/notifications-engine.js`.
+
+## IP Toolkit — a real algorithm, not a live government search
+
+`ip-tools.html` covers the five things people actually ask about IP: a trademark search starting
+point, copyright guidance, patent guidance, brand protection, and an "AI" trademark similarity
+checker. The topbar and an in-page alert both say plainly what's real and what isn't:
+
+- **Trademark similarity checker** (`js/ip-tools-engine.js`) runs a genuine Levenshtein edit-distance
+  calculation plus a simplified phonetic key (so near-homophones like "Kwikk" vs "Quick" still match)
+  against `TRADEMARK_DB` in `js/data/trademark-database.js` — a small seeded list (~80 marks) of
+  real, well-known Indian trademarks, used purely as a comparison set. This is **not** a connection
+  to the IP India Trade Marks Registry database, and every result panel says so — a clean result is
+  not legal clearance, only a first screen.
+- **Trademark class finder** matches a plain-language business description against keyword lists for
+  all 45 NICE classification classes (the same classification India's Trade Marks Registry uses) —
+  real keyword matching, not AI.
+- **Copyright guidance** and **patent guidance** are structured, cited content (duration, fair
+  dealing, registration process, provisional vs. complete specification, fee slabs).
+- **Patentability quick-check** is a rule-based screen against the major Patents Act §3 exclusions
+  (algorithms/business methods, mere discovery, medical treatment methods, mental acts, traditional
+  knowledge, aesthetic creations) — it flags likely statutory bars, but cannot check novelty or prior
+  art, which needs a real search and a patent agent's opinion.
+- **Brand protection** guidance cross-links to the Trademark Filing and Legal Notice Smart Forms, and
+  a "🔔 Set a 10-year renewal reminder" button that adds a real entry to Smart Notifications.
+
+Add more reference trademarks or classes by extending `js/data/trademark-database.js`; the similarity
+threshold, scoring, and phonetic algorithm all live in `js/ip-tools-engine.js`.
 
 ## Notable behavior worth knowing about
 

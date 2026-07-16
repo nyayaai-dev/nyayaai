@@ -313,6 +313,7 @@ const LAWS_DB = {
       tagline: "Trademarks, patents, copyright & designs",
       summary: "Protects creations of the mind — brand names, inventions, creative works, and product designs — through registration with the Indian IP Office and enforcement against infringement and counterfeiting.",
       status: "India's Trade Marks Registry and Patent Office have both cut examination and disposal timelines in recent years under Ease-of-Doing-Business IP reforms; enforcement against online counterfeiting remains an active litigation area.",
+      tools: [{ href: "ip-tools.html", label: "💡 Try the IP Toolkit — trademark similarity checker, class finder & more →" }],
       keyActs: [
         { name: "Trade Marks Act", year: "1999", note: "Trademark registration, infringement & passing off" },
         { name: "Patents Act", year: "1970 (amended 2005)", note: "Patent registration; product patents recognised post-2005 for TRIPS compliance" },

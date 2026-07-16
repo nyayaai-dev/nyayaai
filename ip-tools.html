@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP Toolkit — NyayaAI</title>
+<meta name="description" content="Trademark search guidance, an AI-style trademark similarity checker, a trademark class finder, copyright guidance, patent guidance with a patentability quick-check, and brand protection — for Indian IP law.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>⚖️</span><span><strong>Local matching, not a live government search.</strong> The similarity checker runs a real algorithm against a small reference list — see how below.</span></div></div>
+
+<header class="site-header">
+  <nav class="navbar wrap">
+    <a href="index.html" class="brand"><span class="mark">न्या</span><span>NyayaAI<span class="tag">AI Legal Consultation · India</span></span></a>
+    <div class="navlinks" id="navlinks">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="chat.html" data-nav="chat.html">AI Consultation</a>
+      <a href="documents.html" data-nav="documents.html">Documents</a>
+      <a href="forms.html" data-nav="forms.html">Forms</a>
+      <a href="costs.html" data-nav="costs.html">Costs</a>
+      <a href="ip-tools.html" data-nav="ip-tools.html">IP Tools</a>
+      <a href="notifications.html" data-nav="notifications.html">Reminders</a>
+      <a href="laws.html" data-nav="laws.html">Practice Areas</a>
+      <a href="news.html" data-nav="news.html">Current Affairs</a>
+      <a href="about.html" data-nav="about.html">About</a>
+    </div>
+    <div class="nav-cta">
+      <a href="chat.html" class="btn btn-primary btn-sm">Start Consultation</a>
+      <button class="navtoggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<section class="law-hero">
+  <div class="wrap">
+    <div class="eyebrow">IP Toolkit</div>
+    <h1>Trademarks, copyright &amp; patents — checked and explained</h1>
+    <p class="lead" style="max-width:760px">An AI-style trademark similarity checker, a trademark class finder, plain-language copyright and patent guidance with a patentability quick-check, and what "brand protection" actually involves in India — all in one place.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="alert warn">
+      <div class="ico">🔒</div>
+      <p><strong>What's real here, and what isn't.</strong> The similarity checker and class finder run genuine string-matching / keyword-matching algorithms, entirely in your browser, against a small seeded reference list of well-known marks — <strong>not</strong> a live connection to the IP India Trade Marks Registry database. Treat every result here as a first screen, not a clearance opinion. Always run the official public search on IP India's own portal, and have a trademark/patent agent confirm, before you file or invest in a brand.</p>
+    </div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="doc-mode-tabs">
+      <button class="doc-mode-tab active" data-mode="similarity">🔎 Trademark Similarity Checker</button>
+      <button class="doc-mode-tab" data-mode="classfinder">🏷️ Find My Class</button>
+      <button class="doc-mode-tab" data-mode="copyright">© Copyright</button>
+      <button class="doc-mode-tab" data-mode="patent">🔬 Patents</button>
+      <button class="doc-mode-tab" data-mode="brand">🛡️ Brand Protection</button>
+    </div>
+
+    <!-- ============ SIMILARITY CHECKER ============ -->
+    <div class="doc-mode-panel active" id="panel-similarity">
+      <div class="card" style="padding:28px;margin-bottom:26px">
+        <div class="doc-input-row">
+          <div class="form-field" style="flex:1;min-width:220px">
+            <label for="tmName">Proposed trademark / brand name</label>
+            <input type="text" class="wizard-input" id="tmName" placeholder="e.g. Kwikk Foods">
+          </div>
+          <div class="form-field" style="flex:1;min-width:220px">
+            <label for="tmClass">Class of goods/services (optional)</label>
+            <select class="wizard-input" id="tmClass">
+              <option value="">Not sure — check all classes</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="tmCheckBtn">🔎 Check similarity</button>
+      </div>
+      <div id="tmResults"></div>
+    </div>
+
+    <!-- ============ CLASS FINDER ============ -->
+    <div class="doc-mode-panel" id="panel-classfinder">
+      <div class="card" style="padding:28px;margin-bottom:26px">
+        <div class="form-field">
+          <label for="classDescInput">Describe your product, service, or business in a sentence or two</label>
+          <textarea class="wizard-input" id="classDescInput" rows="3" placeholder="e.g. We sell handmade leather bags and wallets online"></textarea>
+        </div>
+        <button class="btn btn-primary" id="classFindBtn">🏷️ Find my class(es)</button>
+      </div>
+      <div id="classResults"></div>
+      <details style="margin-top:20px">
+        <summary style="cursor:pointer;color:var(--ink-300);font-size:.9rem;padding:8px 0">Show the full 45-class NICE classification table</summary>
+        <div style="overflow-x:auto;margin-top:12px">
+          <table class="simple"><thead><tr><th>Class</th><th>Covers</th></tr></thead><tbody id="allClassesBody"></tbody></table>
+        </div>
+      </details>
+    </div>
+
+    <!-- ============ COPYRIGHT GUIDANCE ============ -->
+    <div class="doc-mode-panel" id="panel-copyright">
+      <div class="article-block">
+        <div class="num">Copyright Act, 1957 · §13</div>
+        <h3>What copyright actually protects</h3>
+        <p>Original literary, dramatic, musical, and artistic works, plus cinematograph films and sound recordings — this includes books, articles, blog posts, photographs, paintings, software code, music, and video. It protects the specific <em>expression</em> of an idea, not the underlying idea, fact, or method itself.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">§13(1)</div>
+        <h3>Copyright arises automatically — registration is optional</h3>
+        <p>Unlike a trademark or patent, copyright exists the moment an original work is created and fixed in some tangible form (written down, saved, recorded) — no registration is required for the right to exist. Registration with the Copyright Office (via <code>copyright.gov.in</code>, Form XIV) is voluntary, but strongly advisable anyway: it creates an official, dated public record that's far easier to rely on as evidence of ownership and creation date if a dispute ever reaches court.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">§22 / §25 / §26</div>
+        <h3>How long copyright lasts</h3>
+        <p>For literary, dramatic, musical, and artistic works: the author's lifetime + 60 years thereafter. For cinematograph films, sound recordings, photographs, and works published anonymously or by a corporate/government body: 60 years from the year of publication.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">§52</div>
+        <h3>Fair dealing — what's allowed without permission</h3>
+        <p>Private/personal use including research, criticism or review, reporting current events, use in judicial proceedings, and certain educational/library uses are all exceptions to infringement — but "fair dealing" in India is narrower and more fact-specific than US "fair use"; how much you use and why matters.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">§51 &amp; §63</div>
+        <h3>If someone infringes your copyright</h3>
+        <p>You can pursue civil remedies (injunction, damages, account of profits) before a District Court, and criminal remedies (imprisonment up to 3 years, fine) since infringement is a cognizable, non-bailable offence under §63. For online infringement, platforms (YouTube, Instagram, etc.) also have their own takedown-request processes you can use in parallel — often faster than litigation for a first response.</p>
+        <a href="forms.html" class="pill gold">Draft a cease-and-desist via the Legal Notice form →</a>
+      </div>
+    </div>
+
+    <!-- ============ PATENT GUIDANCE ============ -->
+    <div class="doc-mode-panel" id="panel-patent">
+      <div class="article-block">
+        <div class="num">Patents Act, 1970 · §2(1)(j)</div>
+        <h3>What makes an invention patentable</h3>
+        <p>Three conditions, all required: it must be <strong>novel</strong> (not disclosed anywhere in the world before your filing date — including your own public demo or paper), involve an <strong>inventive step</strong> (not obvious to someone skilled in the field), and have <strong>industrial applicability</strong> (it can actually be made or used in an industry).</p>
+      </div>
+      <div class="article-block">
+        <div class="num">§7 &amp; §9</div>
+        <h3>Provisional vs. complete specification</h3>
+        <p>Most applicants file a <strong>provisional specification</strong> first — it locks in a priority date cheaply while the invention is still being finalised — then must file the <strong>complete specification</strong> within 12 months, or the application is treated as abandoned.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">§11A &amp; §11B</div>
+        <h3>Timeline: publication, examination &amp; grant</h3>
+        <p>Applications are published 18 months after filing (or earlier, on request). Examination only happens after you separately file a Request for Examination (RFE) — within 48 months of the priority date. Recent Patent Office reforms have meaningfully cut the time to first examination report and grant compared to a few years ago, but a contested application can still take several years to grant.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">Fee schedule</div>
+        <h3>Who pays less</h3>
+        <p>Natural person / startup / small entity applicants pay substantially lower official fees than large entities — roughly an 80% reduction for individuals and up to 60% for startups/small entities, at every stage (filing, RFE, and beyond). Confirm current fee slabs on the IP India portal before filing, as they're revised periodically.</p>
+      </div>
+
+      <div class="card" style="padding:28px;margin-top:30px">
+        <h3 style="font-size:1.05rem">🧪 Patentability quick-check</h3>
+        <p class="small muted">Tick anything that's true about your invention — this checks it against the main statutory exclusions under §3 of the Patents Act. It cannot check novelty or prior art (that needs a real patent search), and it isn't a substitute for a patent agent's opinion.</p>
+        <div id="patentCheckboxes"></div>
+        <button class="btn btn-primary" id="patentCheckBtn" style="margin-top:10px">Check</button>
+        <div id="patentResult" style="margin-top:20px"></div>
+      </div>
+    </div>
+
+    <!-- ============ BRAND PROTECTION ============ -->
+    <div class="doc-mode-panel" id="panel-brand">
+      <div class="article-block">
+        <div class="num">Step 1</div>
+        <h3>Register everything that matters early</h3>
+        <p>Trademark (word mark + logo separately, in every class you actually operate or plan to expand into), the matching domain name(s), and social media handles — squatting on any of these by a third party is far more expensive to undo than to prevent. Copyright registers itself automatically on creation, but register formally for anything commercially important (packaging design, brand copy, software).</p>
+        <a href="forms.html" class="pill gold">File a Trademark via the Smart Forms wizard →</a>
+      </div>
+      <div class="article-block">
+        <div class="num">Trade Marks Act §21</div>
+        <h3>Watch for and oppose conflicting applications</h3>
+        <p>Once your mark is registered, monitor the weekly Trade Marks Journal for identical/similar marks being filed by others in your class — you have <strong>4 months</strong> from the date of journal publication to file a Notice of Opposition. Miss the window and a conflicting mark can proceed to registration.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">§27 &amp; §29</div>
+        <h3>Passing off vs. infringement</h3>
+        <p>If your mark is <em>registered</em>, you sue for infringement (easier to prove — just show a deceptively similar mark on similar goods). If it's <em>unregistered</em>, you can still sue for "passing off" at common law, but you additionally have to prove you've built real goodwill/reputation in the mark — harder and slower. This is the single biggest practical reason to register early rather than rely on first use alone.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">Renewal</div>
+        <h3>Don't let registration lapse</h3>
+        <p>A registered trademark must be renewed every <strong>10 years</strong> (Form TM-R), indefinitely — miss the renewal (plus a limited restoration grace period) and the mark can be removed from the register entirely, opening the door for someone else to claim it.</p>
+        <button class="btn btn-ghost btn-sm" id="tmRenewalReminderBtn" style="margin-top:6px">🔔 Set a 10-year renewal reminder</button>
+      </div>
+      <div class="article-block">
+        <div class="num">.in / INDRP</div>
+        <h3>Domain name disputes</h3>
+        <p>If someone registers a confusingly similar <code>.in</code> domain to squat on or trade off your brand, the INDRP (.IN Domain Name Dispute Resolution Policy) offers a faster, cheaper route than a civil suit to get it transferred — broadly similar in spirit to ICANN's UDRP for generic top-level domains.</p>
+      </div>
+      <div class="article-block">
+        <div class="num">Enforcement</div>
+        <h3>When someone infringes anyway</h3>
+        <p>Start with a cease-and-desist legal notice (fast, cheap, often enough on its own) before escalating to a civil suit for injunction and damages before the relevant District/High Court, or a criminal complaint under the Trade Marks Act for counterfeiting. For online marketplaces, most also have their own IP-complaint takedown processes worth using in parallel.</p>
+        <a href="forms.html" class="pill gold">Draft a cease-and-desist via the Legal Notice form →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="card center" style="padding:36px">
+      <h3>Have a specific IP question?</h3>
+      <p>Ask NyayaAI directly — it already has Indian IP law context loaded.</p>
+      <a href="chat.html?q=I%20have%20a%20question%20about%20intellectual%20property%20in%20India" class="btn btn-primary">💬 Ask NyayaAI →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> NyayaAI. Educational legal information platform — not a law firm.</span>
+      <span><a href="disclaimer.html">Disclaimer</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data/laws-data.js"></script>
+<script src="js/data/news-data.js"></script>
+<script src="js/data/insights-data.js"></script>
+<script src="js/data/trademark-database.js"></script>
+<script src="js/ai-config.js"></script>
+<script src="js/notifications-engine.js"></script>
+<script src="js/ip-tools-engine.js"></script>
+<script src="js/main.js"></script>
+<script src="js/ip-tools-page.js"></script>
+</body>
+</html>

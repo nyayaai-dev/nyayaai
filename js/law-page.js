@@ -25,6 +25,16 @@
     new Date(LAWS_DB.lastReviewed).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" }) +
     ':</strong> ' + cat.status + "</p>";
 
+  // Related interactive tool (only rendered for categories that define one, e.g. IP -> IP Toolkit)
+  if (cat.tools && cat.tools.length) {
+    let toolsHtml = '<div class="badge-row" style="margin-top:16px">';
+    cat.tools.forEach(function (t) {
+      toolsHtml += '<a href="../' + t.href + '" class="pill gold">' + t.label + "</a>";
+    });
+    toolsHtml += "</div>";
+    statusBox.insertAdjacentHTML("afterend", toolsHtml);
+  }
+
   // Key acts table
   const actsBody = document.getElementById("actsBody");
   cat.keyActs.forEach(function (a) {

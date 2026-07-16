@@ -498,3 +498,12 @@ textarea.wizard-input { resize: vertical; min-height: 100px; line-height: 1.5; }
   font-size: .65rem; font-weight: 700; min-width: 17px; height: 17px; border-radius: 999px;
   display: flex; align-items: center; justify-content: center; padding: 0 3px;
 }
+
+/* ---------- IP Toolkit ---------- */
+.risk-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .76rem; font-weight: 700; }
+.risk-badge.risk-high { background: var(--ink-100); color: var(--navy-950); }
+.risk-badge.risk-medium { border: 1px solid var(--ink-100); color: var(--ink-100); }
+.risk-badge.risk-low { border: 1px solid var(--navy-600); color: var(--ink-400); }
+.check-row { display: block; font-size: .88rem; color: var(--ink-300); padding: 8px 0; border-bottom: 1px solid var(--navy-800); cursor: pointer; }
+.check-row input { margin-right: 10px; }
+.check-row:last-child { border-bottom: none; }
