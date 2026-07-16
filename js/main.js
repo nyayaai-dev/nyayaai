@@ -29,38 +29,60 @@
       document.querySelectorAll(".navlinks a[data-nav]").forEach(function (a) {
         if (a.getAttribute("data-nav") === path) a.classList.add("active");
       });
+      const trigger = document.querySelector(".nav-dropdown-trigger");
+      if (trigger && document.querySelector(".nav-dropdown-menu a.active")) trigger.classList.add("active");
     }
 
-    // Documents/Forms/Insights aren't hand-written into every page's nav markup —
-    // inject them once here so every page (existing or future) picks them up
-    // automatically without per-file edits. Each is inserted right before an
-    // "anchor" link already on the page, so ordering stays consistent everywhere.
+    // The feature pages (Documents, Forms, Costs, IP Tools, Reminders, AI Tech, Insights) all
+    // fold into a single "Tools" dropdown rather than sitting as flat top-level nav items —
+    // with the core 5 links (Home/AI Consultation/Practice Areas/Current Affairs/About) already
+    // hardcoded on every page, 12 flat items would overflow on anything short of a very wide
+    // screen. Injected once here so no page hand-authors the dropdown or its contents.
     function injectNavLinks() {
       const nav = document.querySelector(".navlinks");
-      if (!nav) return;
+      if (!nav || nav.querySelector(".nav-dropdown")) return;
 
-      const inserts = [
-        { navKey: "documents.html", text: "Documents", beforeKey: "laws.html" },
-        { navKey: "forms.html", text: "Forms", beforeKey: "laws.html" },
-        { navKey: "costs.html", text: "Costs", beforeKey: "laws.html" },
-        { navKey: "ip-tools.html", text: "IP Tools", beforeKey: "laws.html" },
-        { navKey: "notifications.html", text: "Reminders", beforeKey: "laws.html" },
-        { navKey: "ai-technologies.html", text: "AI Tech", beforeKey: "about.html" },
-        { navKey: "insights.html", text: "Insights", beforeKey: "about.html" }
+      const TOOLS = [
+        { navKey: "documents.html", text: "Documents" },
+        { navKey: "forms.html", text: "Forms" },
+        { navKey: "costs.html", text: "Costs" },
+        { navKey: "ip-tools.html", text: "IP Tools" },
+        { navKey: "notifications.html", text: "Reminders" },
+        { navKey: "ai-technologies.html", text: "AI Tech" },
+        { navKey: "insights.html", text: "Insights" }
       ];
 
-      inserts.forEach(function (item) {
-        if (nav.querySelector('[data-nav="' + item.navKey + '"]')) return;
-        const anchor = Array.from(nav.querySelectorAll("a")).find(function (a) {
-          return new RegExp("(^|/)" + item.beforeKey.replace(".", "\\.") + "$").test(a.getAttribute("href") || "");
-        });
+      const anchor = Array.from(nav.querySelectorAll("a")).find(function (a) {
+        return /(^|\/)laws\.html$/.test(a.getAttribute("href") || "");
+      });
+
+      const wrap = document.createElement("div");
+      wrap.className = "nav-dropdown";
+      const trigger = document.createElement("button");
+      trigger.type = "button";
+      trigger.className = "nav-dropdown-trigger";
+      trigger.innerHTML = 'Tools <span class="caret">▾</span>';
+      const menu = document.createElement("div");
+      menu.className = "nav-dropdown-menu";
+
+      TOOLS.forEach(function (item) {
         const link = document.createElement("a");
         link.href = p(item.navKey);
         link.setAttribute("data-nav", item.navKey);
         link.textContent = item.text;
-        if (anchor) nav.insertBefore(link, anchor);
-        else nav.appendChild(link);
+        menu.appendChild(link);
       });
+
+      wrap.appendChild(trigger);
+      wrap.appendChild(menu);
+      if (anchor) nav.insertBefore(wrap, anchor);
+      else nav.appendChild(wrap);
+
+      trigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        wrap.classList.toggle("open");
+      });
+      document.addEventListener("click", function () { wrap.classList.remove("open"); });
     }
 
     // Same idea for Documents/Forms/Insights/FAQ/Contact — appended to whatever
