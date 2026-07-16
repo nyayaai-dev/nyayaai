@@ -7,8 +7,7 @@ Law), plus a curated Current Affairs feed, practical step-by-step guides, an AI 
 Intelligence tool, 8 Smart Legal Forms wizards, a Legal Cost Calculator, Smart Notifications
 (court/consultation/compliance reminders with rule-based recommendations), an IP Toolkit
 (trademark similarity checker, class finder, copyright/patent guidance, brand protection),
-multilingual site navigation (English, Hindi, Marathi, Gujarati, Tamil, Telugu, Bengali, Kannada),
-site-wide search, and an FAQ/Contact section.
+site-wide search, and an FAQ/Contact section. English only.
 
 Design: monochrome (black/white/gray) throughout — see `css/style.css`.
 
@@ -89,11 +88,6 @@ js/ip-tools-page.js       Controller for ip-tools.html — tabs, similarity chec
 js/data/trademark-database.js   Seeded reference data: the 45-class NICE classification (with keywords
                           for the class finder) and ~80 real, well-known Indian trademarks used only as
                           a comparison set for the similarity checker demo
-
-js/data/i18n-data.js      Translation strings for site chrome (nav, consent modal, search, footer
-                          links) in all 8 supported languages, plus NAV_KEY_MAP (page → string key)
-js/i18n-engine.js         Core i18n lookup — persists the chosen language (localStorage), resolves
-                          a key to the active language's string with an English fallback
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
@@ -212,30 +206,6 @@ checker. The topbar and an in-page alert both say plainly what's real and what i
 
 Add more reference trademarks or classes by extending `js/data/trademark-database.js`; the similarity
 threshold, scoring, and phonetic algorithm all live in `js/ip-tools-engine.js`.
-
-## Multilingual support — chrome only, by design
-
-A language switcher (🌐 dropdown in the nav, next to search) lets visitors switch the site between
-English, Hindi, Marathi, Gujarati, Tamil, Telugu, Bengali, and Kannada. The choice persists in
-`localStorage` (`nyayaai_lang_v1`) and applies across every page.
-
-**What's actually translated:** navigation links, the "Start Consultation" button, the search
-button/label, the mobile menu button, the entry disclaimer (consent) modal, and the compact footer
-link row (Disclaimer/Documents/Forms/Costs/IP Tools/Reminders/FAQ/Contact) — i.e. site chrome, in
-`js/data/i18n-data.js`, applied by `applyChromeTranslations()` in `js/main.js`.
-
-**What's deliberately NOT translated:** the actual legal content — law provisions, practical guides,
-Smart Form drafts, cost estimates, chat answers, and page headlines/body copy all stay in English.
-Hand-translating hundreds of specific legal provisions into 8 languages without a professional,
-reviewed translation pipeline risks getting a legal specific wrong in a language nobody on this
-project can verify — which is a real harm on a legal-information site, not just a rough edge. So
-instead of faking full coverage, switching to any non-English language shows a small dismissible
-notice (`injectLanguageNotice()`) saying plainly that only navigation is translated so far.
-
-To extend real coverage, the honest path is: get the specific content professionally translated and
-reviewed by someone fluent in both the language and Indian legal terminology, then add it as
-per-language fields in the relevant data file (e.g. `laws-data.js`) rather than doing it inline —
-machine-translating legal text at render time is exactly the failure mode this design avoids.
 
 ## Notable behavior worth knowing about
 

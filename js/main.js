@@ -6,7 +6,7 @@
 
     // Each step runs independently — if one throws (e.g. localStorage blocked under a
     // locked-down file:// context), it shouldn't take the rest of the page's behavior with it.
-    [setupMobileNav, injectNavLinks, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectNotificationBell, injectLanguageSwitcher, applyChromeTranslations, injectLanguageNotice, injectConsentModal]
+    [setupMobileNav, injectNavLinks, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectNotificationBell, injectConsentModal]
       .forEach(function (fn) {
         try { fn(); } catch (err) { console.error("[NyayaAI]", fn.name, "failed:", err); }
       });
@@ -235,101 +235,6 @@
       navCta.insertBefore(bell, navCta.firstChild);
     }
 
-    // ---------- Multilingual support (chrome only — see js/data/i18n-data.js for scope) ----------
-    function injectLanguageSwitcher() {
-      if (typeof I18N === "undefined") return;
-      const navCta = document.querySelector(".nav-cta");
-      if (!navCta || navCta.querySelector(".lang-switcher")) return;
-
-      const select = document.createElement("select");
-      select.className = "lang-switcher";
-      select.setAttribute("aria-label", I18N.t("lang.label"));
-      I18N.LANGUAGES.forEach(function (l) {
-        const opt = document.createElement("option");
-        opt.value = l.code;
-        opt.textContent = l.native;
-        select.appendChild(opt);
-      });
-      select.value = I18N.getLang();
-      select.addEventListener("change", function () {
-        I18N.setLang(select.value);
-        applyChromeTranslations();
-        injectLanguageNotice();
-      });
-      navCta.insertBefore(select, navCta.firstChild);
-    }
-
-    function applyChromeTranslations() {
-      if (typeof I18N === "undefined") return;
-
-      document.querySelectorAll(".navlinks a").forEach(function (a) {
-        const href = a.getAttribute("href") || "";
-        const basename = href.split("/").pop().split("?")[0].split("#")[0];
-        const key = typeof NAV_KEY_MAP !== "undefined" ? NAV_KEY_MAP[basename] : null;
-        if (key) a.textContent = I18N.t(key);
-      });
-
-      const searchLabel = document.querySelector(".search-trigger .search-label");
-      if (searchLabel) searchLabel.textContent = I18N.t("nav.search");
-      const searchTrigger = document.querySelector(".search-trigger");
-      if (searchTrigger) searchTrigger.setAttribute("aria-label", I18N.t("nav.search"));
-
-      const startBtn = document.querySelector(".nav-cta a.btn-primary[href$=\"chat.html\"]");
-      if (startBtn) startBtn.textContent = I18N.t("nav.startConsultation");
-
-      const navToggle = document.querySelector(".navtoggle");
-      if (navToggle) navToggle.setAttribute("aria-label", I18N.t("nav.menu"));
-
-      const langSwitcher = document.querySelector(".lang-switcher");
-      if (langSwitcher) langSwitcher.setAttribute("aria-label", I18N.t("lang.label"));
-
-      document.querySelectorAll(".footer-bottom a[href$=\"disclaimer.html\"]").forEach(function (a) {
-        a.textContent = I18N.t("footer.disclaimer");
-      });
-      document.querySelectorAll(".footer-bottom a[href$=\"faq.html\"]").forEach(function (a) {
-        a.textContent = I18N.t("footer.faq");
-      });
-      document.querySelectorAll(".footer-bottom a[href$=\"contact.html\"]").forEach(function (a) {
-        a.textContent = I18N.t("footer.contact");
-      });
-      Object.keys(typeof NAV_KEY_MAP !== "undefined" ? NAV_KEY_MAP : {}).forEach(function (navKey) {
-        document.querySelectorAll('.footer-bottom a[href$="' + navKey + '"]').forEach(function (a) {
-          a.textContent = I18N.t(NAV_KEY_MAP[navKey]);
-        });
-      });
-    }
-
-    // Slim, dismissible notice explaining that only site chrome is translated — shown once per
-    // browser session (sessionStorage, not localStorage) so it doesn't nag on every page visit
-    // but does resurface for a fresh session, since it's genuinely useful context every time.
-    function injectLanguageNotice() {
-      if (typeof I18N === "undefined") return;
-      const existing = document.getElementById("langNotice");
-      if (existing) existing.remove();
-
-      const lang = I18N.getLang();
-      if (lang === "en") return;
-      let dismissed = null;
-      try { dismissed = window.sessionStorage.getItem("nyayaai_lang_notice_dismissed_v1"); } catch (err) { /* ignore */ }
-      if (dismissed) return;
-
-      const topbar = document.querySelector(".topbar");
-      if (!topbar) return;
-
-      const bar = document.createElement("div");
-      bar.id = "langNotice";
-      bar.className = "lang-notice";
-      const nativeName = I18N.nativeName(lang);
-      bar.innerHTML = '<div class="wrap"><span>' + I18N.t("lang.notice").replace("{lang}", nativeName) +
-        '</span><button type="button" class="lang-notice-dismiss">' + I18N.t("lang.noticeDismiss") + "</button></div>";
-      topbar.insertAdjacentElement("afterend", bar);
-
-      bar.querySelector(".lang-notice-dismiss").addEventListener("click", function () {
-        try { window.sessionStorage.setItem("nyayaai_lang_notice_dismissed_v1", "1"); } catch (err) { /* ignore */ }
-        bar.remove();
-      });
-    }
-
     // Wrapped because some browsers throw when localStorage is accessed under a restricted
     // file:// origin, or with storage disabled entirely — this should never be fatal.
     function safeStorage(action, key, value) {
@@ -344,17 +249,13 @@
       const KEY = "nyayaai_consent_seen_v1";
       if (safeStorage("get", KEY)) return;
 
-      const tr = typeof I18N !== "undefined" ? I18N.t : function (k) {
-        const fallback = { "consent.title": "Before you continue", "consent.body": "NyayaAI is an AI-operated legal information platform, not a law firm — nothing on this site is an advertisement or solicitation of legal work. You're accessing this voluntarily, for general information, and no advocate-client relationship is created by using it.", "consent.agree": "I understand — continue", "consent.readFull": "Read the full disclaimer" };
-        return fallback[k] || k;
-      };
       const overlay = document.createElement("div");
       overlay.className = "nyaya-overlay center-modal";
       overlay.innerHTML =
         '<div class="nyaya-modal consent-modal">' +
-        "<h3>" + tr("consent.title") + "</h3>" +
-        "<p>" + tr("consent.body") + "</p>" +
-        '<div class="actions"><button class="btn btn-primary" id="consentAgree">' + tr("consent.agree") + '</button><a href="' + p("disclaimer.html") + '" class="small" style="color:var(--ink-400);text-decoration:underline">' + tr("consent.readFull") + "</a></div>" +
+        "<h3>Before you continue</h3>" +
+        "<p>NyayaAI is an AI-operated legal information platform, not a law firm — nothing on this site is an advertisement or solicitation of legal work. You're accessing this voluntarily, for general information, and no advocate-client relationship is created by using it.</p>" +
+        '<div class="actions"><button class="btn btn-primary" id="consentAgree">I understand — continue</button><a href="' + p("disclaimer.html") + '" class="small" style="color:var(--ink-400);text-decoration:underline">Read the full disclaimer</a></div>' +
         "</div>";
       document.body.appendChild(overlay);
 
