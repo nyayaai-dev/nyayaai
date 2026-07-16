@@ -438,13 +438,37 @@ table.simple th { color: var(--ink-400); font-weight: 600; text-transform: upper
 .diff-added { background: var(--navy-700); color: var(--ink-100); font-weight: 600; border-left: 3px solid var(--ink-100); }
 
 /* ---------- Print report ---------- */
-#printReportArea { max-width: 760px; margin: 0 auto; }
+#printReportArea, #printFormArea { max-width: 760px; margin: 0 auto; }
 @media print {
   .topbar, header.site-header, footer.site-footer, .doc-mode-tabs,
-  #panel-analyze .card, #analyzeResults .badge-row, .nyaya-overlay { display: none !important; }
-  #printReportArea { display: block !important; }
+  #panel-analyze .card, #analyzeResults .badge-row, .nyaya-overlay,
+  #formPicker, #wizardCard, #wizardSection .btn-ghost { display: none !important; }
+  #printReportArea, #printFormArea { display: block !important; }
   body { background: #fff; color: #000; }
-  #printReportArea h1 { font-size: 1.6rem; }
-  #printReportArea h2 { font-size: 1.1rem; margin-top: 24px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  #printReportArea h1, #printFormArea h1 { font-size: 1.6rem; }
+  #printReportArea h2, #printFormArea h2 { font-size: 1.1rem; margin-top: 24px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
   #printReportArea .doc-flag, #printReportArea .doc-extract-item { break-inside: avoid; }
+  #printFormArea .wizard-document { border: none; white-space: pre-wrap; }
+}
+
+/* ---------- Smart Legal Forms wizard ---------- */
+.wizard-progress-bar { height: 6px; background: var(--navy-700); border-radius: 999px; overflow: hidden; margin-top: 14px; }
+.wizard-progress-fill { height: 100%; background: var(--ink-100); transition: width .25s ease; }
+.wizard-input {
+  width: 100%; background: var(--navy-900); border: 1px solid var(--navy-600); border-radius: 10px;
+  color: var(--ink-100); padding: 12px 14px; font-size: .95rem; font-family: inherit; margin-top: 12px;
+}
+textarea.wizard-input { resize: vertical; min-height: 100px; line-height: 1.5; }
+.wizard-input:focus { outline: none; border-color: var(--ink-100); }
+.wizard-choices { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.wizard-choice {
+  border: 1px solid var(--navy-600); background: var(--navy-900); color: var(--ink-200);
+  padding: 10px 18px; border-radius: 999px; font-size: .88rem; cursor: pointer; transition: all .15s;
+}
+.wizard-choice:hover { border-color: var(--ink-400); }
+.wizard-choice.selected { background: var(--ink-100); color: var(--navy-950); border-color: var(--ink-100); font-weight: 600; }
+.wizard-document {
+  white-space: pre-wrap; font-family: var(--font-serif); font-size: .88rem; line-height: 1.7;
+  background: var(--navy-900); border: 1px solid var(--navy-600); border-radius: var(--radius-md);
+  padding: 22px; margin-top: 14px; max-height: 520px; overflow-y: auto;
 }

@@ -4,7 +4,7 @@ A fully static (no build step) website: an AI-operated legal information platfor
 practice areas of Indian law (Constitutional, Criminal (BNS/BNSS/BSA), Civil, Corporate, Family,
 Property, Labour, Tax, Cyber, Consumer, Intellectual Property, Banking & Finance, Traffic & Road
 Law), plus a curated Current Affairs feed, practical step-by-step guides, an AI Document
-Intelligence tool, site-wide search, and an FAQ/Contact section.
+Intelligence tool, 8 Smart Legal Forms wizards, site-wide search, and an FAQ/Contact section.
 
 Design: monochrome (black/white/gray) throughout — see `css/style.css`.
 
@@ -25,6 +25,7 @@ npx serve .
 index.html            Landing page
 chat.html              AI consultation chat UI
 documents.html          AI Document Intelligence — analyze/compare contracts, NDAs, rental agreements, etc.
+forms.html               Smart Legal Forms — 8 guided wizards that draft documents/checklists from your answers
 laws.html               Practice-area hub (grid of all 13 categories)
 laws/<category>.html    13 thin page shells — all content is rendered by js/law-page.js from laws-data.js
 news.html               Current-affairs feed
@@ -55,6 +56,11 @@ js/data/news-data.js      Seeded current-affairs items + NEWS_CONFIG for a futur
 js/data/insights-data.js  Step-by-step practical guides
 js/data/document-checklists.js   Risky-phrase dictionary, obligation/payment keywords, and per-document-type
                           "commonly expected clause" checklists used by doc-analysis.js
+js/forms-engine.js        Smart Legal Forms' generation logic — jurisdiction thresholds, fee tables,
+                          applicable-law branching, and document templating, per form
+js/forms-page.js          Controller for forms.html — drives the step-by-step wizard (incl. conditional
+                          steps), validates answers, renders the generated output + PDF export
+js/data/forms-data.js     Question definitions for all 8 form wizards
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
@@ -78,6 +84,27 @@ actual document, not fabricated output:
 language understanding, so they're gated exactly like the chat: with `AI_CONFIG.apiEndpoint` unset,
 clicking them shows an honest "no AI backend connected" message rather than faking a response. Set
 `apiEndpoint` in `js/ai-config.js` once to enable live AI for *both* the chat and these three buttons.
+
+## Smart Legal Forms — also fully functional without a backend
+
+`forms.html` has 8 short wizards (Legal Notice, Consumer Complaint, FIR Guidance, Property Dispute,
+Trademark Filing, Company Registration, GST Registration, Divorce). Every one of these is genuinely
+rule-based — no AI needed — because drafting a document from structured answers, or applying a
+jurisdiction/fee/threshold rule, is a deterministic task once the branching logic is defined:
+
+- Legal Notice / Consumer Complaint / FIR Guidance generate a real draft document from your answers
+- Consumer Complaint computes the correct forum (District/State/National Commission) from the claim
+  value against the actual 2021-amended pecuniary jurisdiction thresholds
+- GST Registration determines whether registration is mandatory from turnover vs. the correct
+  goods/services threshold for your state (including the special-category state rules)
+- Trademark Filing estimates the government fee (₹4,500 vs ₹9,000/class) from applicant type
+- Divorce branches its guidance by applicable law, mutual-consent vs. contested route, and separation
+  duration (including the Amardeep Singh v. Harveen Kaur cooling-off-waiver point)
+- Company Registration tailors its checklist to Private Limited vs. OPC vs. LLP
+
+Every generated draft is clearly labelled as a starting point, not a certified or filed legal
+document — see the disclaimer on `forms.html` itself. Add new forms by extending `js/data/forms-data.js`
+(questions, with optional `showIf` branching) and adding a generator function to `js/forms-engine.js`.
 
 ## Notable behavior worth knowing about
 

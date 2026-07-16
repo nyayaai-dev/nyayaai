@@ -31,43 +31,38 @@
       });
     }
 
-    // Documents/Insights aren't hand-written into every page's nav markup — inject them
-    // once here so every page (existing or future) picks them up automatically without
-    // per-file edits.
+    // Documents/Forms/Insights aren't hand-written into every page's nav markup —
+    // inject them once here so every page (existing or future) picks them up
+    // automatically without per-file edits. Each is inserted right before an
+    // "anchor" link already on the page, so ordering stays consistent everywhere.
     function injectNavLinks() {
       const nav = document.querySelector(".navlinks");
       if (!nav) return;
 
-      if (!nav.querySelector('[data-nav="documents.html"]')) {
-        const chatLink = Array.from(nav.querySelectorAll("a")).find(function (a) {
-          return /(^|\/)chat\.html$/.test(a.getAttribute("href") || "");
-        });
-        const docsLink = document.createElement("a");
-        docsLink.href = p("documents.html");
-        docsLink.setAttribute("data-nav", "documents.html");
-        docsLink.textContent = "Documents";
-        if (chatLink && chatLink.nextSibling) nav.insertBefore(docsLink, chatLink.nextSibling);
-        else if (chatLink) nav.appendChild(docsLink);
-        else nav.insertBefore(docsLink, nav.firstChild);
-      }
+      const inserts = [
+        { navKey: "documents.html", text: "Documents", beforeKey: "laws.html" },
+        { navKey: "forms.html", text: "Forms", beforeKey: "laws.html" },
+        { navKey: "insights.html", text: "Insights", beforeKey: "about.html" }
+      ];
 
-      if (!nav.querySelector('[data-nav="insights.html"]')) {
-        const aboutLink = Array.from(nav.querySelectorAll("a")).find(function (a) {
-          return /(^|\/)about\.html$/.test(a.getAttribute("href") || "");
+      inserts.forEach(function (item) {
+        if (nav.querySelector('[data-nav="' + item.navKey + '"]')) return;
+        const anchor = Array.from(nav.querySelectorAll("a")).find(function (a) {
+          return new RegExp("(^|/)" + item.beforeKey.replace(".", "\\.") + "$").test(a.getAttribute("href") || "");
         });
-        const insightsLink = document.createElement("a");
-        insightsLink.href = p("insights.html");
-        insightsLink.setAttribute("data-nav", "insights.html");
-        insightsLink.textContent = "Insights";
-        if (aboutLink) nav.insertBefore(insightsLink, aboutLink);
-        else nav.appendChild(insightsLink);
-      }
+        const link = document.createElement("a");
+        link.href = p(item.navKey);
+        link.setAttribute("data-nav", item.navKey);
+        link.textContent = item.text;
+        if (anchor) nav.insertBefore(link, anchor);
+        else nav.appendChild(link);
+      });
     }
 
-    // Same idea for Documents/Insights/FAQ/Contact — appended to whatever footer
-    // structure the page has, instead of requiring every page to hand-author the links.
-    // Each link is checked independently so adding a new one later doesn't get skipped
-    // just because older links are already present.
+    // Same idea for Documents/Forms/Insights/FAQ/Contact — appended to whatever
+    // footer structure the page has, instead of requiring every page to hand-author
+    // the links. Each link is checked independently so adding a new one later
+    // doesn't get skipped just because older links are already present.
     function injectFooterLinks() {
       const platformList = document.querySelector('.footer-grid a[href$="about.html"]');
       if (platformList) {
@@ -75,6 +70,7 @@
         if (ul) {
           const wanted = [
             ["documents.html", "Document Intelligence"],
+            ["forms.html", "Smart Legal Forms"],
             ["insights.html", "Insights &amp; Guides"],
             ["faq.html", "FAQ"],
             ["contact.html", "Contact"]
@@ -93,7 +89,7 @@
           return s.querySelector('a[href$="disclaimer.html"]');
         });
         if (disclaimerSpan) {
-          const wanted = [["documents.html", "Documents"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
+          const wanted = [["documents.html", "Documents"], ["forms.html", "Forms"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
           wanted.forEach(function (pair) {
             if (!bottom.querySelector('a[href$="' + pair[0] + '"]')) {
               disclaimerSpan.insertAdjacentHTML("beforeend", ' · <a href="' + p(pair[0]) + '">' + pair[1] + "</a>");
@@ -139,6 +135,11 @@
         if (typeof DOCUMENT_TYPES !== "undefined") {
           DOCUMENT_TYPES.forEach(function (dt) {
             items.push({ type: "Tool", title: "Analyze a " + dt.name, sub: "Dates, payments, risky clauses, missing clauses, comparison", href: p("documents.html") });
+          });
+        }
+        if (typeof FORMS_DATA !== "undefined") {
+          FORMS_DATA.forEach(function (f) {
+            items.push({ type: "Form", title: f.name + " (Smart Form)", sub: f.tagline, href: p("forms.html") });
           });
         }
         return items;

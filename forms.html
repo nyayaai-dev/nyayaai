@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Legal Forms — NyayaAI</title>
+<meta name="description" content="Interactive step-by-step wizards for divorce, consumer complaints, FIR guidance, property disputes, trademark filing, company registration, GST registration, and legal notices — with a real draft document or checklist generated from your answers.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>⚖️</span><span><strong>100% local, rule-based.</strong> Your answers are processed in your browser and never uploaded — nothing here is a filed or certified legal document.</span></div></div>
+
+<header class="site-header">
+  <nav class="navbar wrap">
+    <a href="index.html" class="brand"><span class="mark">न्या</span><span>NyayaAI<span class="tag">AI Legal Consultation · India</span></span></a>
+    <div class="navlinks" id="navlinks">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="chat.html" data-nav="chat.html">AI Consultation</a>
+      <a href="documents.html" data-nav="documents.html">Documents</a>
+      <a href="forms.html" data-nav="forms.html">Forms</a>
+      <a href="laws.html" data-nav="laws.html">Practice Areas</a>
+      <a href="news.html" data-nav="news.html">Current Affairs</a>
+      <a href="about.html" data-nav="about.html">About</a>
+    </div>
+    <div class="nav-cta">
+      <a href="chat.html" class="btn btn-primary btn-sm">Start Consultation</a>
+      <button class="navtoggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<section class="law-hero">
+  <div class="wrap">
+    <div class="eyebrow">Smart Legal Forms</div>
+    <h1>Answer a few questions, get a real starting point</h1>
+    <p class="lead" style="max-width:720px">Eight guided wizards for the situations people run into most — each one asks a handful of plain-language questions and, from your actual answers, works out the applicable forum, fees, or process, and drafts a real document or checklist. Not AI-generated guesswork — genuine rule-based logic, the same as a well-built intake form.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="alert warn">
+      <div class="ico">⚠️</div>
+      <p><strong>These are drafting aids and starting points, not filed or certified legal documents.</strong> Review every generated draft carefully — and have a licensed advocate check anything before you file it with a court, tribunal, or authority, sign it, or send it as a formal notice.</p>
+    </div>
+  </div>
+</section>
+
+<section class="tight" id="formPicker">
+  <div class="wrap">
+    <div class="grid grid-3" id="formCards"></div>
+  </div>
+</section>
+
+<section class="tight" id="wizardSection" style="display:none">
+  <div class="wrap" style="max-width:760px">
+    <button class="btn btn-ghost btn-sm" id="backToPickerBtn" style="margin-bottom:20px">← Choose a different form</button>
+
+    <div class="card" style="padding:32px" id="wizardCard">
+      <div class="badge-row"><span class="pill" id="wizardFormName"></span><span class="pill" id="wizardProgress"></span></div>
+      <div class="wizard-progress-bar"><div class="wizard-progress-fill" id="wizardProgressFill"></div></div>
+      <div id="wizardStepArea" style="margin-top:24px"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:26px">
+        <button class="btn btn-ghost" id="wizardBackBtn">← Back</button>
+        <button class="btn btn-primary" id="wizardNextBtn">Next →</button>
+      </div>
+    </div>
+
+    <div id="wizardOutput" style="display:none;margin-top:26px"></div>
+  </div>
+</section>
+
+<section class="tight" id="printFormArea" style="display:none"></section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> NyayaAI. Educational legal information platform — not a law firm.</span>
+      <span><a href="disclaimer.html">Disclaimer</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data/laws-data.js"></script>
+<script src="js/data/news-data.js"></script>
+<script src="js/data/insights-data.js"></script>
+<script src="js/data/forms-data.js"></script>
+<script src="js/ai-config.js"></script>
+<script src="js/main.js"></script>
+<script src="js/forms-engine.js"></script>
+<script src="js/forms-page.js"></script>
+</body>
+</html>
