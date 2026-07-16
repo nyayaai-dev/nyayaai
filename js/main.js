@@ -6,7 +6,7 @@
 
     // Each step runs independently — if one throws (e.g. localStorage blocked under a
     // locked-down file:// context), it shouldn't take the rest of the page's behavior with it.
-    [setupMobileNav, injectNavLinks, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectConsentModal]
+    [setupMobileNav, injectNavLinks, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectNotificationBell, injectConsentModal]
       .forEach(function (fn) {
         try { fn(); } catch (err) { console.error("[NyayaAI]", fn.name, "failed:", err); }
       });
@@ -43,6 +43,7 @@
         { navKey: "documents.html", text: "Documents", beforeKey: "laws.html" },
         { navKey: "forms.html", text: "Forms", beforeKey: "laws.html" },
         { navKey: "costs.html", text: "Costs", beforeKey: "laws.html" },
+        { navKey: "notifications.html", text: "Reminders", beforeKey: "laws.html" },
         { navKey: "insights.html", text: "Insights", beforeKey: "about.html" }
       ];
 
@@ -73,6 +74,7 @@
             ["documents.html", "Document Intelligence"],
             ["forms.html", "Smart Legal Forms"],
             ["costs.html", "Cost Calculator"],
+            ["notifications.html", "Smart Notifications"],
             ["insights.html", "Insights &amp; Guides"],
             ["faq.html", "FAQ"],
             ["contact.html", "Contact"]
@@ -91,7 +93,7 @@
           return s.querySelector('a[href$="disclaimer.html"]');
         });
         if (disclaimerSpan) {
-          const wanted = [["documents.html", "Documents"], ["forms.html", "Forms"], ["costs.html", "Costs"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
+          const wanted = [["documents.html", "Documents"], ["forms.html", "Forms"], ["costs.html", "Costs"], ["notifications.html", "Reminders"], ["faq.html", "FAQ"], ["contact.html", "Contact"]];
           wanted.forEach(function (pair) {
             if (!bottom.querySelector('a[href$="' + pair[0] + '"]')) {
               disclaimerSpan.insertAdjacentHTML("beforeend", ' · <a href="' + p(pair[0]) + '">' + pair[1] + "</a>");
@@ -149,6 +151,7 @@
             items.push({ type: "Cost estimate", title: c.name + " — cost estimate", sub: c.tagline, href: p("costs.html") });
           });
         }
+        items.push({ type: "Tool", title: "Smart Notifications — Reminders", sub: "Court dates, consultation reminders, document expiry, compliance deadlines", href: p("notifications.html") });
         return items;
       }
       const INDEX = buildIndex();
@@ -208,6 +211,25 @@
           openSearch();
         }
       });
+    }
+
+    // Bell icon showing a live count of overdue/due-soon reminders (js/notifications-engine.js).
+    // Also fires a real browser Notification for anything due today, on every page — not just
+    // notifications.html — since that only works while some NyayaAI tab happens to be open anyway.
+    function injectNotificationBell() {
+      if (typeof NotificationsEngine === "undefined") return;
+      const navCta = document.querySelector(".nav-cta");
+      if (!navCta || navCta.querySelector(".notif-bell")) return;
+
+      NotificationsEngine.checkAndNotify();
+
+      const count = NotificationsEngine.dueSoonCount();
+      const bell = document.createElement("a");
+      bell.className = "notif-bell";
+      bell.href = p("notifications.html");
+      bell.setAttribute("aria-label", "Reminders");
+      bell.innerHTML = "🔔" + (count > 0 ? '<span class="notif-badge">' + count + "</span>" : "");
+      navCta.insertBefore(bell, navCta.firstChild);
     }
 
     // Wrapped because some browsers throw when localStorage is accessed under a restricted

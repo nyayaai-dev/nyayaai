@@ -194,9 +194,11 @@
         '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">' +
         '<button class="btn btn-ghost btn-sm" id="copyDraftBtn">📋 Copy text</button>' +
         '<button class="btn btn-primary btn-sm" id="printDraftBtn">🖨️ Print / Save as PDF</button>' +
+        (currentForm.id === "legal-notice" && typeof NotificationsEngine !== "undefined" ? '<button class="btn btn-ghost btn-sm" id="remindFollowUpBtn">🔔 Remind me to follow up</button>' : "") +
         "</div><p class=\"small muted\" style=\"margin-top:10px\">This is a drafting aid, not a certified legal document — have an advocate review it before you send or file it.</p>" +
         "</div>";
     }
+    if (typeof NotificationsEngine !== "undefined") NotificationsEngine.recordToolUsage(currentForm.id, { formName: currentForm.name });
 
     html += '<div class="center" style="margin-top:24px">' +
       '<button class="btn btn-ghost" id="startOverBtn">Start over</button>' +
@@ -226,6 +228,24 @@
         area.style.display = "block";
         window.print();
         area.style.display = "none";
+      });
+    }
+    const remindBtn = document.getElementById("remindFollowUpBtn");
+    if (remindBtn) {
+      remindBtn.addEventListener("click", function () {
+        const days = parseInt((answers.deadlineDays || "15").match(/\d+/)[0], 10);
+        const followUp = new Date();
+        followUp.setDate(followUp.getDate() + days);
+        const iso = followUp.getFullYear() + "-" + String(followUp.getMonth() + 1).padStart(2, "0") + "-" + String(followUp.getDate()).padStart(2, "0");
+        NotificationsEngine.addReminder({
+          title: "Follow up: legal notice to " + (answers.recipientName || "recipient"),
+          category: "Consultation Reminder",
+          date: iso,
+          notes: "Deadline given in the notice (" + answers.deadlineDays + ") has passed — check for a response and decide next steps.",
+          source: "legal-notice"
+        });
+        remindBtn.textContent = "✓ Reminder set";
+        remindBtn.disabled = true;
       });
     }
     const startOverBtn = document.getElementById("startOverBtn");

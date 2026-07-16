@@ -4,8 +4,9 @@ A fully static (no build step) website: an AI-operated legal information platfor
 practice areas of Indian law (Constitutional, Criminal (BNS/BNSS/BSA), Civil, Corporate, Family,
 Property, Labour, Tax, Cyber, Consumer, Intellectual Property, Banking & Finance, Traffic & Road
 Law), plus a curated Current Affairs feed, practical step-by-step guides, an AI Document
-Intelligence tool, 8 Smart Legal Forms wizards, a Legal Cost Calculator, site-wide search, and an
-FAQ/Contact section.
+Intelligence tool, 8 Smart Legal Forms wizards, a Legal Cost Calculator, Smart Notifications
+(court/consultation/compliance reminders with rule-based recommendations), site-wide search, and
+an FAQ/Contact section.
 
 Design: monochrome (black/white/gray) throughout — see `css/style.css`.
 
@@ -28,6 +29,8 @@ chat.html              AI consultation chat UI
 documents.html          AI Document Intelligence — analyze/compare contracts, NDAs, rental agreements, etc.
 forms.html               Smart Legal Forms — 8 guided wizards that draft documents/checklists from your answers
 costs.html               Legal Cost Calculator — lawyer/court/registration/government fees & stamp duty, as ranges
+notifications.html       Smart Notifications — court/consultation reminders, document expiry, compliance
+                          deadlines, and rule-based recommendations, all stored in browser localStorage
 laws.html               Practice-area hub (grid of all 13 categories)
 laws/<category>.html    13 thin page shells — all content is rendered by js/law-page.js from laws-data.js
 news.html               Current-affairs feed
@@ -67,6 +70,13 @@ js/costs-engine.js        Legal Cost Calculator's estimation logic — MCA fee s
                           fees, ad valorem court fee ranges, stamp duty ranges, lawyer fee ranges
 js/costs-page.js          Controller for costs.html — matter picker, inline inputs, results table
 js/data/costs-data.js     Matter-type + input-field definitions for all 9 cost calculators
+js/notifications-engine.js   Smart Notifications' logic — reminder CRUD, urgency classification, the
+                          Notification API wrapper, tool-usage tracking, and the rule-based
+                          recommendation engine — all backed by localStorage, no server involved
+js/notifications-page.js  Controller for notifications.html — permission UI, add-reminder form,
+                          compliance quick-add, recommendations panel, and the grouped upcoming list
+js/data/compliance-deadlines.js   Recurring statutory deadline templates (ITR, advance tax, GSTR-3B,
+                          ROC filings) used by the quick-add panel to compute the next occurrence
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
@@ -129,6 +139,35 @@ Two kinds of figures are mixed in deliberately:
   compiled from commonly published sources, clearly caveated as needing confirmation with your
   advocate, Sub-Registrar, or court. Add new matter types by extending `js/data/costs-data.js` and
   adding a calculator function to `js/costs-engine.js`.
+
+## Smart Notifications — real reminders, entirely client-side
+
+`notifications.html` tracks four kinds of reminders (Court Reminder, Consultation Reminder, Document
+Expiry, Compliance Deadline), all stored in `localStorage` (`nyayaai_reminders_v1`) — nothing is sent
+to a server, so reminders don't sync across devices and disappear if browser data is cleared. This is
+disclosed up front in the page's topbar and an explainer alert, not buried in a privacy policy.
+
+- **Manual reminders** and a **compliance quick-add** panel (`js/data/compliance-deadlines.js`) that
+  computes the next real occurrence of recurring deadlines (ITR, advance tax instalments, monthly
+  GSTR-3B, ROC AOC-4/MGT-7) from today's date — genuine date math, not hardcoded strings.
+- **Cross-links from other tools**: dates extracted by AI Document Intelligence get a "🔔 Remind me"
+  button (`js/documents-page.js`), and a generated Legal Notice gets a "🔔 Remind me to follow up"
+  button that computes the response-deadline date automatically (`js/forms-page.js`). Both record which
+  tool was used (`NotificationsEngine.recordToolUsage`) so the recommendation engine can react to it.
+- **Rule-based recommendations** (`NotificationsEngine.getRecommendations` in
+  `js/notifications-engine.js`) — e.g. nudging you to set a follow-up reminder before a tracked document
+  expires, or pointing out you've used Document Intelligence but never saved any of its extracted dates.
+  These are deterministic `if` rules over your own local data, explicitly not AI-generated, and each one
+  can be dismissed permanently (`nyayaai_dismissed_recs_v1`).
+- **Real browser notifications** (`Notification.requestPermission()` / `new Notification(...)`) fire for
+  anything due today, but only while a NyayaAI tab is open — this is disclosed as not being a background
+  push service, and the UI suggests also using a phone calendar for anything critical like a court date.
+- A **bell icon with an unread-count badge** is injected into the nav on every page by
+  `injectNotificationBell` in `js/main.js`, reading `NotificationsEngine.dueSoonCount()`.
+
+Add a new recurring compliance deadline by extending the `COMPLIANCE_DEADLINES` array in
+`js/data/compliance-deadlines.js`; add a new cross-link by calling `NotificationsEngine.addReminder(...)`
+from any page that already loads `js/notifications-engine.js`.
 
 ## Notable behavior worth knowing about
 

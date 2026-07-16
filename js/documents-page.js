@@ -10,6 +10,24 @@
     });
   }
 
+  // Best-effort parse of an extracted date string ("1st August 2026", "01/08/2026",
+  // etc.) into an ISO YYYY-MM-DD, so it can be saved as a reminder. DD/MM/YYYY is
+  // handled explicitly since JS's native Date parsing assumes MM/DD/YYYY for slash
+  // dates, which would silently misread Indian-format dates.
+  function parseExtractedDate(str) {
+    const cleaned = str.replace(/(\d+)(st|nd|rd|th)/gi, "$1").trim();
+    const slashMatch = cleaned.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})$/);
+    if (slashMatch) {
+      let [, d, m, y] = slashMatch;
+      if (y.length === 2) y = "20" + y;
+      const iso = y + "-" + m.padStart(2, "0") + "-" + d.padStart(2, "0");
+      return isNaN(new Date(iso).getTime()) ? null : iso;
+    }
+    const parsed = new Date(cleaned);
+    if (isNaN(parsed.getTime())) return null;
+    return parsed.getFullYear() + "-" + String(parsed.getMonth() + 1).padStart(2, "0") + "-" + String(parsed.getDate()).padStart(2, "0");
+  }
+
   const docTypeSelect = document.getElementById("docType");
   if (!docTypeSelect) return; // not on documents.html
 
@@ -120,8 +138,28 @@
       missing.missing.map(function (p) { return '<div class="doc-checklist-item missing">⚠ ' + escapeHtml(p) + " — not detected</div>"; }).join("");
 
     document.getElementById("datesResults").innerHTML = dates.length
-      ? dates.map(function (d) { return '<div class="doc-extract-item"><strong>' + escapeHtml(d.date) + '</strong><p class="small muted doc-quote">"' + escapeHtml(d.context) + '"</p></div>'; }).join("")
+      ? dates.map(function (d, i) {
+          const iso = parseExtractedDate(d.date);
+          return '<div class="doc-extract-item"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px">' +
+            "<strong>" + escapeHtml(d.date) + "</strong>" +
+            (iso && typeof NotificationsEngine !== "undefined" ? '<button class="btn btn-ghost btn-sm remind-date-btn" data-iso="' + iso + '" data-label="' + escapeHtml(d.date) + '" data-idx="' + i + '">🔔 Remind me</button>' : "") +
+            '</div><p class="small muted doc-quote">"' + escapeHtml(d.context) + '"</p></div>';
+        }).join("")
       : '<p class="small muted">No dates detected.</p>';
+    document.querySelectorAll(".remind-date-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        NotificationsEngine.addReminder({
+          title: docTypeName + " — " + btn.dataset.label,
+          category: "Document Expiry",
+          date: btn.dataset.iso,
+          notes: "Found by Document Intelligence in a " + docTypeName.toLowerCase() + ".",
+          source: "document-intelligence"
+        });
+        btn.textContent = "✓ Reminder set";
+        btn.disabled = true;
+      });
+    });
+    if (typeof NotificationsEngine !== "undefined") NotificationsEngine.recordToolUsage("document-intelligence", { docType: docTypeName });
 
     document.getElementById("paymentsResults").innerHTML = payments.length
       ? payments.map(function (p) { return '<div class="doc-extract-item">' + (p.amount ? "<strong>" + escapeHtml(p.amount) + "</strong>" : "") + '<p class="small muted doc-quote">"' + escapeHtml(p.context) + '"</p></div>'; }).join("")
