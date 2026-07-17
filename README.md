@@ -27,8 +27,7 @@ npx serve .
 ## Project structure
 
 ```
-index.html            Landing page — dark glassmorphic design (see "Homepage design" below),
-                          scoped to this page only; every other page keeps the monochrome system
+index.html            Landing page
 chat.html              AI consultation chat UI
 documents.html          AI Document Intelligence — analyze/compare contracts, NDAs, rental agreements, etc.
 forms.html               Smart Legal Forms — 8 guided wizards that draft documents/checklists from your answers
@@ -58,12 +57,11 @@ js/main.js               Nav toggle, active-link highlighting, site-wide search,
 js/ai-config.js           Shared AI_CONFIG (apiEndpoint + system prompts) used by both chat.js and
                           documents-page.js — set apiEndpoint once here to enable a live backend for both
 js/chat-engine.js         Pure chat retrieval/reply logic (demo-mode retrieval + live-backend hook,
-                          no DOM) — shared by js/chat.js and the homepage's live demo widget
+                          no DOM), used by js/chat.js — kept as its own module so any other page
+                          that wants the same chat logic can reuse it without duplicating it
 js/chat.js                Controller for chat.html — wires the chat UI to ChatEngine, plus mic
                           dictation, text-to-speech, quick prompts, and the ?q= prefill param
-js/index-page.js          Controller for the redesigned index.html — stats, practice-area chips,
-                          features, the live demo chat widget (wired to ChatEngine), FAQ accordion,
-                          scroll/spotlight effects
+js/index-page.js          Renders the homepage's practice-area grid, footer links, and news preview
 js/law-page.js            Renders a category page from laws-data.js
 js/insights-page.js       Renders insights.html from insights-data.js
 js/doc-analysis.js        Document Intelligence's local analysis engine (dates, payments, obligations,
@@ -296,59 +294,6 @@ A handful of sitewide polish items, added in one pass:
   duplicating it.
 - **Keyboard shortcuts** — `Ctrl/Cmd+K` now works as an alias for the existing `/` search
   shortcut, and `?` opens a shortcuts help modal (`injectKeyboardShortcuts()` in `js/main.js`).
-
-## Homepage design — imported from Claude Design, adapted for honesty
-
-`index.html` was redesigned from a Claude Design Composer project (a dark, glassmorphic landing
-page) at the user's request, scoped to the homepage only — every other page keeps the site's
-regular monochrome design system, by explicit choice, rather than a full site-wide redesign.
-
-The source file (`.dc.html`) isn't plain HTML — it's a proprietary preview format with template
-bindings (`{{ }}`, `sc-for`, `sc-if`) and a React-style component that only runs inside claude.ai's
-own design tool. Getting it onto a static GitHub Pages site meant a real translation, not a copy
-paste, and a few things were deliberately changed rather than carried over as-is:
-
-- **The "AI Demo" chat called `window.claude.complete()`** — a claude.ai-only API that doesn't exist
-  on a deployed static site and would fail silently. It's wired instead to `js/chat-engine.js`, the
-  same real local retrieval engine `chat.html` uses (refactored out of the old `js/chat.js` into a
-  shared module specifically so both chat surfaces answer identically instead of drifting apart).
-  Demo mode by default; genuinely LLM-powered if you connect `AI_CONFIG.apiEndpoint`, same as
-  everywhere else on the site.
-- **Fabricated social proof was removed, not toned down.** The source design shipped a trust-logo
-  strip ("STARTUP CO.", "LEX & PARTNERS", ...), a usage-stats counter (10,000+ queries, 98%
-  satisfaction), and a testimonials carousel with literal placeholder text ("Placeholder testimonial
-  — real quote to be supplied", "Client name"). This is a solo AI-built project with no real clients,
-  partners, or usage data — shipping any of that as real would be actively deceptive, not just
-  unfinished. The stats section instead shows the same honest numbers the old homepage did (13 real
-  Practice Areas, 24/7, ₹0 fee, 0 human gatekeepers, computed from `LAWS_DB` rather than hardcoded),
-  and the trust-logo and testimonial sections were dropped entirely rather than replaced with
-  something equally fake.
-- **A "Case Prediction" feature card and a "Lawyer Verified" / "Multilingual" claim were in the
-  source design but don't exist on this site** (there's no outcome-prediction tool, no advocate
-  review pipeline, and multilingual support was built and then explicitly removed earlier — see git
-  history). The features and "why choose us" sections were rewritten to describe the six things that
-  are actually live: AI Legal Chat, Document Intelligence, Smart Legal Forms, Cost Calculator, IP
-  Toolkit, and Smart Notifications.
-- **The FAQ answers were rewritten for accuracy** — e.g. the source's privacy answer claimed
-  encryption and "no training without consent" (neither is implemented, there's no backend to train
-  anything); the real answer is that nothing is sent anywhere unless you connect a live AI backend,
-  and local features store data only in your own browser.
-- **The command palette (⌘K) was replaced with the site's real search**, not rebuilt as a second,
-  separate mock search with 3 hardcoded items — clicking it or pressing `Ctrl/Cmd+K` opens the exact
-  same site-wide search overlay every other page uses (`main.js`'s `.search-trigger`, re-skinned for
-  the dark theme via page-scoped CSS).
-- **Google Fonts (`fonts.googleapis.com`) was dropped** in favour of the site's existing system-font
-  stack, to keep the zero-external-dependency posture already established for PDF.js/Tesseract.js —
-  no new CSP relaxation, nothing fetched from a third party.
-- The footer's fake newsletter signup and dead social icons (`X`, `in`, `IG`, `YT`, all `href="#"`)
-  were replaced with real links to every actual page on the site (Documents, Forms, Costs, IP
-  Toolkit, Reminders, Practice Areas, AI Technologies, Insights, About, Contact, and all three legal
-  pages) so nothing becomes unreachable from the new homepage.
-
-Everything else — the scroll progress bar, cursor spotlight, animated background grid, orbiting
-hero visual, animated stat counters, FAQ accordion — is a faithful, real (non-mocked) implementation
-of what the design specified, in vanilla JS matching the rest of the codebase's style (no framework,
-no build step). See `js/index-page.js`.
 
 ## Notable behavior worth knowing about
 
