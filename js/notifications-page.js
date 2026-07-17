@@ -52,6 +52,7 @@
     document.getElementById("rTitle").value = "";
     document.getElementById("rNotes").value = "";
     renderAll();
+    if (typeof NyayaFX !== "undefined") NyayaFX.toast("🔔 Reminder added — \"" + escapeHtml(title) + "\"");
   });
 
   // ---------- Quick-add compliance deadlines ----------
@@ -67,6 +68,7 @@
         const c = COMPLIANCE_DEADLINES.find(function (d) { return d.id === btn.dataset.id; });
         NotificationsEngine.addReminder({ title: c.name, category: "Compliance Deadline", date: btn.dataset.date, notes: c.note, source: "compliance-template" });
         renderAll();
+        if (typeof NyayaFX !== "undefined") NyayaFX.toast("🔔 Reminder added — \"" + escapeHtml(c.name) + "\"");
       });
     });
   }

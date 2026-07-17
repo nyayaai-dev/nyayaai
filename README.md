@@ -38,6 +38,8 @@ ip-tools.html            IP Toolkit — trademark similarity checker, trademark 
                           guidance, patent guidance with a patentability quick-check, and brand protection
 ai-technologies.html     Honest status catalog of every AI/ML-style technique on the site — what's
                           genuinely live and local vs. what needs a connected AI backend
+404.html                 Custom not-found page — GitHub Pages serves this automatically for any
+                          unmatched URL
 laws.html               Practice-area hub (grid of all 13 categories)
 laws/<category>.html    13 thin page shells — all content is rendered by js/law-page.js from laws-data.js
 news.html               Current-affairs feed
@@ -98,6 +100,10 @@ js/data/trademark-database.js   Seeded reference data: the 45-class NICE classif
                           a comparison set for the similarity checker demo
 js/ai-technologies-page.js   Controller + inline content for ai-technologies.html — the honest
                           live-vs-backend-gated status catalog for every AI technique on the site
+js/ui-fx.js               Shared, dependency-free toast notifications and confetti burst — loaded
+                          on every page
+js/404-page.js            Controller for 404.html — wires its "Search the site" button to the same
+                          overlay the nav search uses
 
 server/chat-proxy-example.js   Reference Express backend to proxy chat to an LLM (not run automatically)
 ```
@@ -256,6 +262,33 @@ LLM-powered Q&A, Retrieval-Augmented Generation, true semantic embeddings, and A
 all shown on that page as requiring a connected backend — see "The AI chat... currently run in demo
 mode" below for exactly how to wire one up. AI translation was evaluated and intentionally not built
 (see git history) — the site is English-only by design for now.
+
+## Small details
+
+A handful of sitewide polish items, added in one pass:
+
+- **Loading screen** — a brief branded fade-out on every page load, pure CSS (`body::before`/
+  `::after` in `css/style.css`, no markup or JS needed anywhere), respects
+  `prefers-reduced-motion`, hidden in print.
+- **Custom favicon** — replaced the generic ⚖️ emoji favicon with a proper branded mark (black
+  rounded square + "न्या", matching the header brand logo exactly) across every page.
+- **Custom 404 page** — [404.html](404.html) matches the site's design and links back to the
+  main tools; GitHub Pages serves it automatically for any unmatched URL, no config needed.
+- **Empty states** — audited every filterable list; fixed a real gap where filtering
+  [news.html](news.html) by a practice area with no seeded articles (IP, Banking, Traffic, Civil,
+  Corporate, Property, Consumer) rendered a silent blank grid. Now shows an explanatory message
+  with a link straight to chat. New `.empty-state` CSS component for reuse elsewhere.
+- **Confetti** — the site has no literal "booking" flow, so this fires at the closest real
+  equivalent: successfully generating a document in Smart Forms (`js/forms-page.js`). Dependency-free
+  canvas burst in `js/ui-fx.js`, grayscale to match the monochrome design system, skipped entirely
+  under `prefers-reduced-motion`.
+- **Toast notifications** — `NyayaFX.toast()` in `js/ui-fx.js`, loaded on every page. Wired into
+  the two places that genuinely lacked any success feedback: adding a manual reminder and
+  quick-adding a compliance deadline on [notifications.html](notifications.html). Left the
+  existing inline "✓ Copied" / "✓ Reminder set" button-text feedback alone elsewhere rather than
+  duplicating it.
+- **Keyboard shortcuts** — `Ctrl/Cmd+K` now works as an alias for the existing `/` search
+  shortcut, and `?` opens a shortcuts help modal (`injectKeyboardShortcuts()` in `js/main.js`).
 
 ## Notable behavior worth knowing about
 

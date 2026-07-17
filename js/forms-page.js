@@ -208,6 +208,7 @@
     out.innerHTML = html;
     out.style.display = "block";
     out.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof NyayaFX !== "undefined") NyayaFX.confettiBurst();
 
     const copyBtn = document.getElementById("copyDraftBtn");
     if (copyBtn) {

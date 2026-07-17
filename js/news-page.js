@@ -11,6 +11,15 @@
   function render(filter) {
     grid.innerHTML = "";
     const items = filter ? NEWS_DB.filter(function (n) { return n.lawArea === filter; }) : NEWS_DB;
+    if (items.length === 0) {
+      const cat = LAWS_DB.categories.find(function (c) { return c.id === filter; });
+      grid.innerHTML = '<div class="empty-state">' +
+        '<div class="empty-state-icon">📰</div>' +
+        '<p>No current-affairs items tagged ' + (cat ? cat.icon + " " + cat.name : "this area") + ' yet — check back soon, or ' +
+        '<a href="chat.html?q=' + encodeURIComponent("What's the latest legal news in " + (cat ? cat.name : "India")) + '">ask NyayaAI directly →</a></p>' +
+        "</div>";
+      return;
+    }
     items.slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); }).forEach(function (n) {
       const cat = LAWS_DB.categories.find(function (c) { return c.id === n.lawArea; });
       grid.innerHTML += '<div class="card news-card" id="' + n.id + '">' +

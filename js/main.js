@@ -6,7 +6,7 @@
 
     // Each step runs independently — if one throws (e.g. localStorage blocked under a
     // locked-down file:// context), it shouldn't take the rest of the page's behavior with it.
-    [setupMobileNav, injectNavLinks, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectNotificationBell, injectConsentModal]
+    [setupMobileNav, injectNavLinks, injectFooterLinks, highlightActiveNav, setFooterYear, injectSearch, injectNotificationBell, injectKeyboardShortcuts, injectConsentModal]
       .forEach(function (fn) {
         try { fn(); } catch (err) { console.error("[NyayaAI]", fn.name, "failed:", err); }
       });
@@ -258,6 +258,49 @@
       bell.setAttribute("aria-label", "Reminders");
       bell.innerHTML = "🔔" + (count > 0 ? '<span class="notif-badge">' + count + "</span>" : "");
       navCta.insertBefore(bell, navCta.firstChild);
+    }
+
+    // ---------- Keyboard shortcuts ----------
+    // "/" already opens search (see injectSearch); this adds Ctrl/Cmd+K as the more
+    // conventional alias, plus a "?" help modal listing every shortcut in one place.
+    function injectKeyboardShortcuts() {
+      document.addEventListener("keydown", function (e) {
+        const active = document.activeElement;
+        const typing = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.isContentEditable);
+
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+          e.preventDefault();
+          const trigger = document.querySelector(".search-trigger");
+          if (trigger) trigger.click();
+          return;
+        }
+        if (e.key === "?" && !typing) {
+          e.preventDefault();
+          openShortcutsModal();
+        }
+      });
+
+      function openShortcutsModal() {
+        if (document.querySelector(".shortcuts-modal")) return;
+        const isMac = navigator.platform.toUpperCase().indexOf("MAC") !== -1;
+        const overlay = document.createElement("div");
+        overlay.className = "nyaya-overlay center-modal";
+        overlay.innerHTML =
+          '<div class="nyaya-modal shortcuts-modal">' +
+          "<h3>Keyboard shortcuts</h3>" +
+          '<div class="shortcut-row"><span>Open search</span><span><span class="kbd">/</span> <span class="small muted">or</span> <span class="kbd">' + (isMac ? "⌘" : "Ctrl") + '+K</span></span></div>' +
+          '<div class="shortcut-row"><span>Close any dialog</span><span class="kbd">Esc</span></div>' +
+          '<div class="shortcut-row"><span>Show this help</span><span class="kbd">?</span></div>' +
+          '<button class="btn btn-ghost btn-sm" id="closeShortcuts" style="margin-top:18px">Close</button>' +
+          "</div>";
+        document.body.appendChild(overlay);
+        function close() { overlay.remove(); }
+        overlay.querySelector("#closeShortcuts").addEventListener("click", close);
+        overlay.addEventListener("click", function (e) { if (e.target === overlay) close(); });
+        document.addEventListener("keydown", function escHandler(e) {
+          if (e.key === "Escape") { close(); document.removeEventListener("keydown", escHandler); }
+        });
+      }
     }
 
     // Wrapped because some browsers throw when localStorage is accessed under a restricted
