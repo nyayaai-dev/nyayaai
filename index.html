@@ -64,8 +64,17 @@ body.nya-landing { margin: 0; background: var(--nya-bg); font-family: var(--font
 /* Reuse + reskin the shared search trigger / notif bell for this page only */
 #nyaLanding .search-trigger { background: rgba(255,255,255,.04); border-color: var(--nya-border); color: var(--nya-dimmer); }
 #nyaLanding .search-trigger:hover { color: #fff; border-color: rgba(255,255,255,.2); }
-#nyaLanding .notif-bell { border-color: var(--nya-border); color: var(--nya-dim); }
+/* The shared bell is a bare circular icon everywhere else on the site (tooltip-only via
+   aria-label) — on this page it sits right beside the labeled search pill, so give it a
+   matching visible "Reminders" caption instead of leaving it as an unlabeled icon. */
+#nyaLanding .notif-bell {
+  width: auto; height: auto; padding: 8px 14px; border-radius: 999px;
+  border-color: var(--nya-border); color: var(--nya-dim); font-size: 12px; font-weight: 600;
+  gap: 6px;
+}
+#nyaLanding .notif-bell::after { content: "Reminders"; }
 #nyaLanding .notif-bell:hover { color: #fff; border-color: rgba(255,255,255,.2); }
+#nyaLanding .notif-bell .notif-badge { position: static; margin-left: 2px; }
 
 /* Hero */
 .nya-hero { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 70px 24px 60px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
@@ -179,7 +188,9 @@ body.nya-landing { margin: 0; background: var(--nya-bg); font-family: var(--font
 .nya-footer-bottom { max-width: 1180px; margin: 0 auto; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.06); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--nya-faint); }
 .nya-footer-bottom a { color: var(--nya-faint); }
 
-.nya-fab { position: fixed; bottom: 28px; right: 28px; z-index: 900; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(135deg,var(--nya-accent-1),var(--nya-accent-2)); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(20,184,166,.5); font-size: 22px; animation: floatY2 4s ease-in-out infinite; }
+.nya-fab { position: fixed; bottom: 28px; right: 28px; z-index: 900; display: flex; align-items: center; gap: 8px; padding: 15px 22px 15px 18px; border-radius: 999px; background: linear-gradient(135deg,var(--nya-accent-1),var(--nya-accent-2)); color: #05130f; font-weight: 700; font-size: 14px; box-shadow: 0 8px 32px rgba(20,184,166,.5); animation: floatY2 4s ease-in-out infinite; }
+.nya-fab:hover { color: #05130f; }
+@media (max-width: 480px) { .nya-fab span { display: none; } .nya-fab { padding: 15px; } }
 
 /* Loading-screen colors for this dark page only */
 #nyaLanding ~ * { }
@@ -353,7 +364,7 @@ body.nya-landing::after { color: #fff !important; }
   </div>
 </footer>
 
-<a href="#demo" title="Try AI Assistant" class="nya-fab">💬</a>
+<a href="#demo" title="Try AI Assistant" class="nya-fab">💬 <span>Try AI Assistant</span></a>
 
 </div>
 
